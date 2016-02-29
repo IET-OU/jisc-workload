@@ -1,3 +1,5 @@
+[![Build status — Travis-CI][travis-icon]][travis]
+
 # Jisc Student Workload Tool
 
 A web-based tool for recording, visualising and managing student workload on courses,
@@ -58,5 +60,9 @@ Contributors:  [@djitsz][] (original developer)
 [jisc]: https://jisc.ac.uk/ "formerly the Joint Information Systems Committee, UK"
 [iet]: http://iet.open.ac.uk/
 [@djitsz]: https://github.com/djitsz "Jitse van Ameijde"
+
+
+[travis]: https://travis-ci.org/IET-OU/jisc-workload "Build status — Travis-CI"
+[travis-icon]: https://travis-ci.org/IET-OU/jisc-workload.svg
 
 [End]: //end.
