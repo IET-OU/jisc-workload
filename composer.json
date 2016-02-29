@@ -28,9 +28,7 @@
     ],
     "test": [
       "# composer validate --no-interaction",
-      "parallel-lint framework/*",
-      "# parallel-lint site/*",
-      "parallel-lint index.php",
+      "./vendor/bin/parallel-lint --exclude vendor .",
       "# phpcs --standard=PSR2 -n --encoding=utf-8 --extensions=php framework/base/CController.*",
       "# phpcs --standard=PSR2 -n --encoding=utf-8 --extensions=php framework/controllers/CDefaultController.*",
       "phpcs --standard=PSR2 -n --encoding=utf-8 --extensions=php index.php"
