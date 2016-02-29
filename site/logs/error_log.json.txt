@@ -1,0 +1,21 @@
+[{
+  "type":"Warning",
+  "timestamp":"25\/10\/2015 12:51:04",
+  "message":"file_get_contents(... \/jisc-workload\\site\\templates\\templates.json): failed to open stream: No such file or directory",
+  "file":"... \\jisc-workload\\framework\\base\\CWebApplication.php",
+  "line":116,
+  "uri":""
+},{
+  "type":"Notice","timestamp":"25\/10\/2015 13:10:02",
+  "message":"Undefined variable: controllerId",
+  "file":"... \\jisc-workload\\framework\\base\\CWebApplication.php",
+  "line":161,
+  "uri":""
+},{
+  "type":"Notice",
+  "timestamp":"25\/10\/2015 13:10:02",
+  "message":"Undefined index: session",
+  "file":"... \\jisc-workload\\framework\\base\\CWebApplication.php",
+  "line":189,
+  "uri":""
+}]

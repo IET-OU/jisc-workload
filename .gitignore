@@ -1,0 +1,20 @@
+# .gitignore
+
+/framework/tables.sql
+/site/config/config.php
+/site/logs/error_log.json
+
+/js/*
+!/js/bootstrap.min.js
+!/js/jquery-1.10.2.min.js
+!/js/scripts.js
+# Exclude eg. /js/ef518551362246f4d047fa4c6e5c1aff7686d1d1.js
+
+*BAK*
+*copy*
+*.diff
+*.patch
+
+._git
+
+#End.
