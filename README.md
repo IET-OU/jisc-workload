@@ -8,8 +8,9 @@ developed by The Open University with support from [Jisc][] micro-project fundin
 ## Requirements
 
 - Linux, Max OS X or Windows
-- PHP 5.4+ (JSON enabled)
 - Apache 2.2+ (`mod_rewrite`)
+- PHP 5.4+ (JSON enabled)
+    * [Composer][]
 
 ## Installation
 
@@ -17,6 +18,7 @@ Before installing the files in the document root of the web server, a few change
 need to be made to a configuration file and a database needs to be created on the
 web server which can be accessed by the workload tool.
 
+01. Run `composer setup-config`
 01. Open the file `site/config/config.php`
 02. Scroll to the bottom of the file
 03. Change the `mailer` entry with the correct host, username and password for the mail server to be used
@@ -50,6 +52,7 @@ Contributors:  [@djitsz][] (original developer)
 
 
 [blog]: http://analytics.jiscinvolve.org/wp/2016/02/09/guest-post-jisc-ou-student-workload-tool/
+[composer]: https://getcomposer.org/ "Dependency Manager for PHP"
 [gpl]: https://gnu.org/licenses/gpl.html
 [src]: https://github.com/IET-OU/
 [jisc]: https://jisc.ac.uk/ "formerly the Joint Information Systems Committee, UK"

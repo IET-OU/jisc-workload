@@ -1,0 +1,31 @@
+# see http://about.travis-ci.org/docs/user/languages/php/
+language: php
+php:
+  #- 5.5
+  - 5.6
+  #- 7.0
+  #- hhvm
+
+git:
+  depth: 3
+
+before_install:
+  - composer self-update
+  - composer --version
+
+install:
+  - composer install
+
+before_script:
+  - composer setup-config
+
+script:
+  - parallel-lint framework/*
+  - parallel-lint site/*
+  - parallel-lint index.php
+  - phpcs --standard=PSR2 -n --encoding=utf-8 --extensions=php index.php
+
+notifications:
+  #- iet-webmaster@open.ac.uk
+
+#End.
