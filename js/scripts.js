@@ -1,3 +1,7 @@
+/*!
+  Jisc/OU Student Workload Tool.
+  License: GPL-3.0+ | Jitse van Ameijde | © 2015 The Open University.
+*/
 var studySpeeds=[35,70,120];
 var defaultStudySpeed = 1;
 var unsavedChanges = false;
@@ -19,7 +23,7 @@ function calculateSummary($summaryRow) {
     $row = $summaryRow.next();
     while($row.length == 1 && !$row.hasClass('summary')) {
         var total = 0;
-        
+
         var wordcount = parseInt($row.find('input.wordcount').val());
         var studySpeed = parseInt($row.find('select').val());
         var av = parseInt($row.find('input.av').val());
@@ -31,7 +35,7 @@ function calculateSummary($summaryRow) {
         var interactive = parseInt($row.find('input.interactive').val());
         var assessment = parseInt($row.find('input.assessment').val());
         var tuition = parseInt($row.find('input.tuition').val());
-        
+
         if(!isNaN(wordcount)) {
             totals.wordcount += wordcount;
             total += wordcount / studySpeeds[studySpeed];
@@ -67,7 +71,7 @@ function calculateSummary($summaryRow) {
         if(!isNaN(assessment)) {
             totals.assessment += assessment;
             total += assessment;
-        } 
+        }
         if(!isNaN(tuition)) {
             totals.tuition += tuition;
             total += tuition;
@@ -108,7 +112,7 @@ function processWorkloadTable() {
             $(this).find('input.experiential').attr('name','row-' + row + '-experiential');
             $(this).find('input.interactive').attr('name','row-' + row + '-interactive');
             $(this).find('input.assessment').attr('name','row-' + row + '-assessment');
-            $(this).find('input.tuition').attr('name','row-' + row + '-tuition');            
+            $(this).find('input.tuition').attr('name','row-' + row + '-tuition');
             row++;
         }
         if($(this).hasClass('summary')) unit++;
@@ -119,14 +123,14 @@ $(document).ready(function(e) {
         $('tr.summary').each(function(e) {
             calculateSummary($(this));
         });
-        
+
         $('a.confirm-changes').on('click',function(e) {
             var result = true;
             if(unsavedChanges == true) result = confirm('You have unsaved changes. Click cancel to stay on the page or OK to continue without saving your changes');
             if(result == true) window.location.href = $(this).attr('href');
             else return false;
         });
-        
+
         $('body').on('mouseover', '.popup',function(e) {
             var offset = $(this).offset();
             var width = $(this).width();
@@ -191,7 +195,7 @@ $(document).ready(function(e) {
                 });
             }
         });
-        
+
         $('body').on('click','.remove-collaborator',function(e) {
             var id = $(this).attr('data-value');
             $(this).parent().remove();
@@ -209,7 +213,7 @@ $(document).ready(function(e) {
             return false;
         });
 
-        
+
         //Add an event listener for dragging rows around
         $('body').on('mousedown','.drag-handle', function(e) {
             var prevY = e.pageY;
@@ -222,7 +226,7 @@ $(document).ready(function(e) {
                 document.onselectstart = function () { return false; }
                 //We need to add an event listener for when the mouse is moved
                 $(document).bind('mousemove.dragndrop', function(e) {
-                    //Get the row element associated with the current mouse position 
+                    //Get the row element associated with the current mouse position
                     var $target = $(e.target).closest('tr');
                     //Make sure the target element and the dragging element aren't the same one
                     if($target[0] != $tr[0] && ($target.hasClass('workload-row') || $target.hasClass('summary'))) {
@@ -258,8 +262,8 @@ $(document).ready(function(e) {
                 });
             }
         });
-        
-        
+
+
         $(document).on('scroll',function(e) {
             if($('.workload-table').length == 0) return true;
             var offset = $('.workload-table').offset();
@@ -296,8 +300,8 @@ $(document).ready(function(e) {
             });
             return false;
         });
-        
-        
+
+
         $('body').on('change','#workload-table input,#workload-table select',function(e) {
             unsavedChanges = true;
             var $row = $(this).closest('tr');
@@ -312,7 +316,7 @@ $(document).ready(function(e) {
                 $newRow.find('.total').text('');
                 $newRow.find('input,select').attr('name','temp');
                 $newRow.insertAfter($row);
-                processWorkloadTable();                
+                processWorkloadTable();
             }
         });
         $('body').on('click','.remove-row',function(e) {
@@ -327,7 +331,7 @@ $(document).ready(function(e) {
                 while(!$summaryRow.hasClass('summary')) $summaryRow = $summaryRow.prev();
                 $row.remove();
                 processWorkloadTable();
-                calculateSummary($summaryRow);                
+                calculateSummary($summaryRow);
                 unsavedChanges = true;
             }
             return false;
@@ -342,7 +346,7 @@ $(document).ready(function(e) {
             unsavedChanges = true;
             return false;
         });
-        
+
         $('body').on('click','.add-unit',function(e) {
             var $rows = $('#workload-table').find('tr.summary');
             var $newRow = $('#workload-table tbody tr:last').clone();

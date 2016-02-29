@@ -1,32 +1,35 @@
 <?php
 /**
 * CCourseController class file
-* 
-* @author Jitse van Ameijde <djitsz@yahoo.com>
-* 
+*
+* Jisc / OU Student Workload Tool.
+*
+* @license   http://gnu.org/licenses/gpl.html GPL-3.0+
+* @author    Jitse van Ameijde <djitsz@yahoo.com>
+* @copyright 2015 The Open University.
 */
 
 defined('ALL_SYSTEMS_GO') or die;
 /**
 * CCourseController implements the controller for actions involving users
-* 
-* 
+*
+*
 */
     class CCourseController extends CController {
-        
-        
+
+
         /**
         *  constructor - initialises variables
-        * 
+        *
         */
         public function __construct() {
             parent::__construct('admin','Default');
         }
-        
-        
+
+
         /**
         * actionView - Default view when no controller or action is selected
-        * 
+        *
         */
         function actionView() {
             // If user is authenticated show the overview screen
@@ -45,16 +48,16 @@ defined('ALL_SYSTEMS_GO') or die;
                 $this->application->responseHandler->redirect('/login/');
             }
         }
-        
+
         /**
         * actionAdd - Adds a new course
-        * 
+        *
         */
         function actionAdd() {
-            if(!$this->application->user->isAuthenticated()) { 
+            if(!$this->application->user->isAuthenticated()) {
                 $this->application->responseHandler->redirect('/login/');
                 return;
-            }            
+            }
             $course = null;
             if($this->application->user->isSuperAdministrator()) {
                 $faculties = CFacultyModel::loadByAttributes(array(),array('order by'=>'`institutionId` asc, `name` asc'))->getObjectArray();
@@ -93,7 +96,7 @@ defined('ALL_SYSTEMS_GO') or die;
                 $users['users'][] = array('text'=>$member->firstName . ' ' . $member->lastName,'value'=>$member->userId);
             }
             $this->application->includeJavaScriptSnippet('$(document).ready(function(){$.extend(globalVars,' . json_encode($users) . ');});');
-            
+
             $error = false;
             if($form->wasSubmitted()) {
                 if($form->validate()) {
@@ -125,16 +128,16 @@ defined('ALL_SYSTEMS_GO') or die;
             $this->attachViewToRegion('main','course','add',array('form'=>$form,'course'=>$course));
             $this->render();
         }
-        
+
         /**
         * actionEdit - Edits a course
-        * 
+        *
         */
         function actionEdit() {
-            if(!$this->application->user->isAuthenticated()) { 
+            if(!$this->application->user->isAuthenticated()) {
                 $this->application->responseHandler->redirect('/login/');
                 return;
-            }            
+            }
             $courseId = $this->application->requestHandler->requestVar(CRequestHandler::TYPE_INT,'courseId');
             if($courseId) {
                 $course = CCourseModel::loadByPk($courseId);
@@ -188,7 +191,7 @@ defined('ALL_SYSTEMS_GO') or die;
                     $users['users'][] = array('text'=>$member->firstName . ' ' . $member->lastName,'value'=>$member->userId);
                 }
                 $this->application->includeJavaScriptSnippet('$(document).ready(function(){$.extend(globalVars,' . json_encode($users) . ');});');
-                
+
                 $error = false;
                 if($form->wasSubmitted()) {
                     if($form->validate()) {
@@ -224,16 +227,16 @@ defined('ALL_SYSTEMS_GO') or die;
                 $this->render();
             }
         }
-        
+
         /**
         * actionDelete - Deletes a course
-        * 
+        *
         */
         function actionDelete() {
-            if(!$this->application->user->isAuthenticated()) { 
+            if(!$this->application->user->isAuthenticated()) {
                 $this->application->responseHandler->redirect('/login/');
                 return;
-            }            
+            }
             $courseId = $this->application->requestHandler->requestVar(CRequestHandler::TYPE_INT,'courseId');
             if($courseId) {
                 $course = CCourseModel::loadByPk($courseId);
@@ -250,6 +253,5 @@ defined('ALL_SYSTEMS_GO') or die;
                 $this->render();
             }
         }
-        
-    }  
-?>
+
+    }

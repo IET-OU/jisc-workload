@@ -1,4 +1,14 @@
 <?php
+/**
+* CONFIGURATION - copy, then search and replace the text `{ EDIT ME }`
+*
+* Jisc / OU Student Workload Tool.
+*
+* @license   http://gnu.org/licenses/gpl.html GPL-3.0+
+* @author    Jitse van Ameijde <djitsz@yahoo.com>
+* @copyright 2015 The Open University.
+*/
+
     return array(
         'tableSpecifications' => array(
             'sessions'=>array(
@@ -189,15 +199,19 @@
                 )
             )
         ),
-        'db'=>array(
-            'connectionString'=>'mysql:dbname={ EDIT ME };host={ EDIT ME };charset=utf8',
-            'username'=>'{ EDIT ME }',
-            'password'=>'{ EDIT ME }'
+
+        // EDIT ME - edit the `db` and `mailer` entries.
+
+        'db' => array(
+            'connectionString' => 'mysql:dbname={ EDIT ME };host={ EDIT ME };charset=utf8',
+            'username' => '{ EDIT ME }',
+            'password' => '{ EDIT ME }'
         ),
-        'mailer'=>array(
-            'host'=>'{ EDIT ME }',
-            'username'=>'{ EDIT ME }',
-            'password'=>'{ EDIT ME }'
+        'mailer' => array(
+            'host' => '{ EDIT ME }',
+            'username' => '{ EDIT ME }',
+            'password' => '{ EDIT ME }'
         )
     );
-?>
+
+#End.

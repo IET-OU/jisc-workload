@@ -1,17 +1,20 @@
 <?php
 /**
 * CCollaboratorModel class file
-* 
-* @author Jitse van Ameijde <djitsz@yahoo.com>
-* 
+*
+* Jisc / OU Student Workload Tool.
+*
+* @license   http://gnu.org/licenses/gpl.html GPL-3.0+
+* @author    Jitse van Ameijde <djitsz@yahoo.com>
+* @copyright 2015 The Open University.
 */
 
 defined('ALL_SYSTEMS_GO') or die;
 /**
 * CCollaboratorModel provides the model for course collaborators
-* 
-* 
-*/    
+*
+*
+*/
     class CCollaboratorModel extends CRelationalModel {
 
         /**
@@ -31,7 +34,6 @@ defined('ALL_SYSTEMS_GO') or die;
                 'course'=>array(self::HAS_ONE,'CCourseModel','courseId')
             );
         }
-        
-        
+
+
     }
-?>

@@ -1,5 +1,8 @@
 # .gitignore
 
+composer.lock
+/vendor/*
+
 /framework/tables.sql
 /site/config/config.php
 /site/logs/error_log.json

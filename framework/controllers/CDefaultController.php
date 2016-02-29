@@ -1,32 +1,35 @@
 <?php
 /**
 * CDefaultController class file
-* 
-* @author Jitse van Ameijde <djitsz@yahoo.com>
-* 
+*
+* Jisc / OU Student Workload Tool.
+*
+* @license   http://gnu.org/licenses/gpl.html GPL-3.0+
+* @author    Jitse van Ameijde <djitsz@yahoo.com>
+* @copyright 2015 The Open University.
 */
 
 defined('ALL_SYSTEMS_GO') or die;
 /**
 * CDefaultController implements the controller for default actions such as login
-* 
-* 
+*
+*
 */
     class CDefaultController extends CController {
-        
-        
+
+
         /**
         *  constructor - initialises variables
-        * 
+        *
         */
         public function __construct() {
             parent::__construct('admin','Default');
         }
-        
-        
+
+
         /**
         * actionView - Default view when no controller or action is selected
-        * 
+        *
         */
         function actionView() {
             // If user is authenticated show the overview screen
@@ -45,10 +48,10 @@ defined('ALL_SYSTEMS_GO') or die;
             }
             $this->render();
         }
-        
+
         /**
         * actionLogin - logs in a user
-        * 
+        *
         */
         function actionLogin() {
             if((isset($_GET['resetToken']) && isset($_GET['login'])) || isset($_POST['resetToken'])) {
@@ -59,7 +62,7 @@ defined('ALL_SYSTEMS_GO') or die;
                     'repeatPassword' => array('type'=>'password', 'placeholder'=>'Confirm password...'),
                     'submit' => array('type'=>'submit', 'label'=>'Login', 'class'=>'btn-primary'),
                 );
-                $validators = array(array('login,resetToken,password,repeatPassword','required'));                
+                $validators = array(array('login,resetToken,password,repeatPassword','required'));
             }
             else {
                 $fields = array(
@@ -80,7 +83,7 @@ defined('ALL_SYSTEMS_GO') or die;
             if(isset($_POST['reset'])) $validators = array(array('login','required'),array('reset','safe'));
 
             $loginForm = new CForm('login-form','/login/',$fields,$validators,false);
-            
+
             if($loginForm->wasSubmitted()) {
                 if($loginForm->validate()) {
                     if($loginForm->resetToken) {
@@ -108,7 +111,7 @@ defined('ALL_SYSTEMS_GO') or die;
                     }
                     else {
                         $loginForm->setMessage('Unable to login with the provided username and password.');
-                    }                    
+                    }
                 }
                 else {
                     $loginForm->setMessage('Please correct the indicated errors in the form.');
@@ -118,6 +121,5 @@ defined('ALL_SYSTEMS_GO') or die;
             $this->render();
 //            $this->renderPartial('login', array('loginForm'=>$loginForm));
         }
-        
-    }  
-?>
+
+    }

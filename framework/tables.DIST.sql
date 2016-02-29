@@ -1,3 +1,13 @@
+--
+-- DATABASE - copy, then search and replace the text `EDIT ME`
+--
+-- Jisc / OU Student Workload Tool.
+--
+-- @license   http://gnu.org/licenses/gpl.html GPL-3.0+
+-- @author    Jitse van Ameijde <djitsz@yahoo.com>
+-- @copyright 2015 The Open University.
+--
+
 CREATE TABLE IF NOT EXISTS `institutions` (
   `institutionId` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
@@ -144,8 +154,15 @@ CREATE TABLE IF NOT EXISTS `items` (
   FOREIGN KEY (`deletedBy`) REFERENCES `users` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) COLLATE utf8_unicode_ci ENGINE=InnoDB;
 
+--
+-- EDIT ME.
+--
+
 INSERT INTO `institutions` (`institutionId`, `name`) VALUES
-(1,'[Name of your institution - EDIT ME]');
+(1, '[Name of your institution - EDIT ME]');
 
 INSERT INTO `users` (`userId`, `institutionId`, `firstName`, `lastName`, `email`, `login`, `password`, `resetToken`, `accessLevel`, `status`, `created`, `lastUpdatedBy`, `lastUpdated`, `lastLogin`, `deletedBy`, `deleted`) VALUES
 (1, 1, '[First name - EDIT ME]', '[Last name - EDIT ME]', '[Email - EDIT ME]', '[Login - EDIT ME]', SHA1('[Password - EDIT ME]'), NULL, 0, 1, '2014-01-01 12:00:00', 1, '2014-01-01 12:00:00', '2014-01-01 12:00:00', NULL, NULL);
+
+
+-- End.
