@@ -7,7 +7,7 @@
 <!--<![endif]-->    <head>
     <title><?php echo $this->title;?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <meta charset="utf-8">
     <?php
         if(isset($page) && $page->description != null && $page->description != '') {
             echo '<meta name="description" content="' . htmlentities($page->description,ENT_COMPAT,'utf-8') . '">';
@@ -38,23 +38,23 @@
         <div id="site-body">
             <div class="container">
                 <div class="row">
-                    <div class="col-xs-12 workload-header">
+                    <div class="col-xs-12 workload-header" role="banner">
                         <h1>Student Workload Tool</h1>
                         <div class="logos">
-                            <a href="https://www.jisc.ac.uk/" title="Jisc"><img src="<?php echo $webroot ?>/css/img/jisc-logo.png" alt="Jisc Logo" title="Jisc Logo"></a>
-                            <a href="http://www.open.ac.uk/" title="The Open University"><img src="<?php echo $webroot ?>/css/img/ou-logo.png" alt="OU Logo" title="OU Logo"></a>
-                            <a href="<?php echo $webroot ?>/logout/" title="Logout"><img src="<?php echo $webroot ?>/css/img/logout.png" alt="Logout" title="Logout"></a>
+                            <a href="https://www.jisc.ac.uk/"><img src="<?php echo $webroot ?>/css/img/jisc-logo.png" alt="Jisc" title="Jisc"></a>
+                            <a href="http://www.open.ac.uk/"><img src="<?php echo $webroot ?>/css/img/ou-logo.png" alt="The Open University" title="The Open University"></a>
+                            <a href="<?php echo $webroot ?>/logout/"><img src="<?php echo $webroot ?>/css/img/logout.png" alt="Logout" title="Logout"></a>
                         </div>
                     </div>
                 </div>
-                <div class="row workload-content">
+                <div class="row workload-content" role="main">
                     <?php
                         $this->renderRegion('main');
                     ?>
                 </div>
             </div>
         </div>
-        <footer id="site-footer">
+        <footer id="site-footer" role="contentinfo">
             <div class="container">
                 <div class="row">
                     <div class="col-xs-12">
@@ -66,9 +66,15 @@
             </div>
         </footer>
         <?php
-            if(!isset($_SESSION['acceptedCookies']) || $_SESSION['acceptedCookies'] == false) {
-                echo '<div class="cookies-notice"><table><tbody><tr><td><img src="' . $webroot . '/css/img/cookies.png" alt="Some cookies" /></td><td>This site uses <a href="http://en.wikipedia.org/wiki/HTTP_cookie" target="_blank">cookies</a>. These cookies store small bits of anonymous data on how visitors use this website. By using this website you agree that we place these cookies on your device. <a href="/accept-cookies/">Hide this notice</a></td></tr></tbody></table></div>';
-            }
+            if(!isset($_SESSION['acceptedCookies']) || $_SESSION['acceptedCookies'] == false):
+        ?>
+            <div class="cookies-notice" role="alert"><table><tbody><tr><td><img src="<?php echo $webroot ?>/css/img/cookies.png" alt="" /></td>
+            <td>This site uses <a href="http://en.wikipedia.org/wiki/HTTP_cookie" target="_blank">cookies</a>.
+            These cookies store small bits of anonymous data on how visitors use this website.
+            By using this website you agree that we place these cookies on your device.
+            <a href="<?php echo $webroot ?>/accept-cookies/">Hide this notice</a></td></tr></tbody></table></div>
+        <?php
+            endif;
         ?>
         <?php
             $this->application->renderBodyScripts();
