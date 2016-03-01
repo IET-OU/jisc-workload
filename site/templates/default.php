@@ -77,6 +77,7 @@
             endif;
         ?>
         <?php
+            $this->renderRegion('googleAnalytics');
             $this->application->renderBodyScripts();
         ?>
     </body>

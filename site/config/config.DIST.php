@@ -214,6 +214,7 @@
             'password' => '{ EDIT ME }'
         ),
         'webroot' => '',  //{ EDIT ME }
+        'googleAnalyticsId' => 'UA-3845152-20',
     );
 
 #End.
