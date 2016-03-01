@@ -200,10 +200,11 @@
             )
         ),
 
-        // EDIT ME - edit the `db` and `mailer` entries.
+        // EDIT ME - edit the `db`, `mailer` and `webroot` entries.
 
         'db' => array(
             'connectionString' => 'mysql:dbname={ EDIT ME };host={ EDIT ME };charset=utf8',
+            // With PORT: 'connectionString' => 'mysql:dbname={ EDIT ME };host={ EDIT ME };port={ EDIT ME };charset=utf8',
             'username' => '{ EDIT ME }',
             'password' => '{ EDIT ME }'
         ),
@@ -211,7 +212,8 @@
             'host' => '{ EDIT ME }',
             'username' => '{ EDIT ME }',
             'password' => '{ EDIT ME }'
-        )
+        ),
+        'webroot' => '',  //{ EDIT ME }
     );
 
 #End.

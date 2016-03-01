@@ -1,20 +1,20 @@
 <?php
 /**
 * CControler class file
-* 
+*
 * @author Jitse van Ameijde <djitsz@yahoo.com>
 * @copyright Copyright &copy; 2013 Quantum Frog Ltd
-* 
+*
 */
 
 defined('ALL_SYSTEMS_GO') or die;
 /**
 * CControler constitutes the base controller class
-* 
-* 
+*
+*
 */
     class CController {
-        
+
         protected $_controllerId;
         protected $_moduleId;
         protected $_viewRegions;
@@ -23,13 +23,13 @@ defined('ALL_SYSTEMS_GO') or die;
         protected $_pageElementTypes;
         protected $_outputFormat;
         protected $_templateOverride;
-        
+
         protected $application;
         protected $title;
-        
+
         /**
         *  constructor - initialises variables
-        * 
+        *
         */
         public function __construct($moduleId,$controllerId) {
             $this->_moduleId = $moduleId;
@@ -45,7 +45,7 @@ defined('ALL_SYSTEMS_GO') or die;
                 'slideshow' => 'slideshow',
                 'gallery' => 'image gallery',
                 'content-overview' => 'content overview',
-                'web-form' => 'web form', 
+                'web-form' => 'web form',
                 'google-map' => 'google map',
                 'search-field' => 'search field',
                 'search-results' => 'search results',
@@ -54,21 +54,21 @@ defined('ALL_SYSTEMS_GO') or die;
             $this->_outputFormat = 'html';
             $this->_templateOverride = null;
         }
-        
-        
+
+
         /**
         * overrideTemplate - overrides the default template for content output
-        * 
+        *
         * @param string $template - the name of the template
-        * 
+        *
         */
         public function overrideTemplate($template) {
             $this->_templateOverride = $template;
         }
-        
+
         /**
         *  renderPartial - renders the indicated view without embedding it in the layout
-        * 
+        *
         * @param string $view - the name of the view to render
         * @param array $viewVars - array of variables to make accessible to the view
         */
@@ -84,10 +84,10 @@ defined('ALL_SYSTEMS_GO') or die;
             $viewFile = $this->application->viewRoot . DIRECTORY_SEPARATOR . strtolower($this->_moduleId) . DIRECTORY_SEPARATOR . $controllerFolder . DIRECTORY_SEPARATOR . $view . '.php';
             include($viewFile);
         }
-        
+
         /**
         * render - renders the view
-        * 
+        *
         * @param array $viewVars - array of variables to make accessible to the view
         */
         public function render($viewVars = null) {
@@ -96,14 +96,15 @@ defined('ALL_SYSTEMS_GO') or die;
                     $$name = $value;
                 }
             }
+            $webroot = $this->application->webRoot;
             $template = 'default';
             $templateFile = $this->application->templateRoot . DIRECTORY_SEPARATOR . $template . '.php';
             include($templateFile);
         }
-        
+
         /**
         * renderSnippet - renders a snipped with the provided view vars
-        * 
+        *
         * @param string $snippet - name of the snippet to render
         * @param array $viewVars - array of variables to make accessible to the snippet
         */
@@ -116,11 +117,11 @@ defined('ALL_SYSTEMS_GO') or die;
             $snippetFile = $this->application->frameworkRoot . DIRECTORY_SEPARATOR . 'snippets' . DIRECTORY_SEPARATOR . $snippet . '.php';
             include($snippetFile);
         }
-        
-        
+
+
         /**
         * attachViewToRegion - attaches the specified view to the specified hook
-        * 
+        *
         * @param string $region - the region to attach the specified view to
         * @param string $viewCollection - the collection in which to find the view
         * @param string $view - the view to attach to the hook
@@ -131,11 +132,11 @@ defined('ALL_SYSTEMS_GO') or die;
             if(!isset($this->_viewRegions[$region])) $this->_viewRegions[$region] = array();
             $this->_viewRegions[$region][] = array('view'=>$view,'viewCollection'=>$viewCollection,'viewVars'=>$viewVars,'wrapperClass'=>$wrapperClass);
         }
-        
+
         /**
         * renderRegion - renders all elements attached to the specified region. Normally called by the template to place the
         * various elements within the overall layout
-        * 
+        *
         * @param string $region - the name of the hook to render
         */
         public function renderRegion($region) {
@@ -151,7 +152,7 @@ defined('ALL_SYSTEMS_GO') or die;
                             $$name = $value;
                         }
                     }
-                    if($_view_['wrapperClass'] != null) echo '<div class="' . $_view_['wrapperClass'] . '">'; 
+                    if($_view_['wrapperClass'] != null) echo '<div class="' . $_view_['wrapperClass'] . '">';
                     include($viewFile);
                     if($_view_['wrapperClass'] != null) echo '</div>';
                     if($this->application->user->isEditor() && isset($pageElement) && $this->_outputFormat == 'html') {
@@ -160,41 +161,40 @@ defined('ALL_SYSTEMS_GO') or die;
                 }
             }
         }
-        
+
         /**
         * countElements - returns the number of elements attached to the specified region
-        * 
+        *
         * @param mixed $region
         */
         public function countElements($region) {
             return isset($this->_viewRegions[$region]) ? count($this->_viewRegions[$region]) : 0;
         }
-        
+
         /**
         * onBeforeAction function called before the controller action is invoked
-        * 
+        *
         */
         public function onBeforeAction() {
-            
+
         }
-        
+
         /**
         * onAfterAction function called before the controller action is invoked
-        * 
+        *
         */
         public function onAfterAction() {
-            
+
         }
-        
+
         /**
         * setOutputWrapper - sets a wrapper for wrapping the output of the rendered views
         * For instance, wrapping the output in a dialog box markup
-        * 
+        *
         * @param CWrapper $wrapper
         */
-        
+
         public function setOutputWrapper($wrapper) {
             $this->_outputWrapper = $wrapper;
         }
-    }  
-?>
+    }

@@ -1,16 +1,16 @@
 <?php
 /**
 * CWebApplication class file
-* 
+*
 * @author Jitse van Ameijde <djitsz@yahoo.com>
-* 
+*
 */
 
 defined('ALL_SYSTEMS_GO') or die;
 /**
 * CWebApplication provides the overall application context from which the site is run
-* 
-* 
+*
+*
 */
     class CWebApplication {
 
@@ -18,7 +18,7 @@ defined('ALL_SYSTEMS_GO') or die;
         * @var mixed The web application instance
         */
         private static $_instance = null;
-        
+
         /**
         * @var array $_javaScriptIncludes - the javascript files to include in the current page
         */
@@ -28,7 +28,7 @@ defined('ALL_SYSTEMS_GO') or die;
         * @var array $_javaScript - the javascript snippets to include in the current page
         */
         private $_javaScript;
-        
+
         /**
         * @var string $documentRoot - the document root folder
         */
@@ -48,7 +48,7 @@ defined('ALL_SYSTEMS_GO') or die;
         * @var string $controllerRoot - the controllers root folder
         */
         public $controllerRoot;
-        
+
         /**
         * @var string $templateRoot - the templates root folder
         */
@@ -60,20 +60,25 @@ defined('ALL_SYSTEMS_GO') or die;
         public $siteRoot;
 
         /**
+        * @var string $webRoot - the web root URL path
+        */
+        public $webRoot;
+
+        /**
         * @var array The configuration array for this web application instance
         */
         public $config;
-        
+
         /**
         * @var mixed The database handler instance
         */
         public $db;
-        
+
         /**
         * @var CWebUser user - the current web user
         */
         public $user;
-        
+
         /**
         * @var CRequestHandler requestHandler - the request handler
         */
@@ -83,19 +88,20 @@ defined('ALL_SYSTEMS_GO') or die;
         * @var CResponseHandler responseHandler - the response handler
         */
         public $responseHandler;
-        
+
         /**
         * Constructor - initialises variables
         */
         public function __construct() {
             $this->config = require('site' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.php');
             $this->db = CDatabaseHandler::getInstance($this->config['db']['connectionString'],$this->config['db']['username'],$this->config['db']['password']);
-            $this->documentRoot = $_SERVER['DOCUMENT_ROOT'];
+            $this->documentRoot = __DIR__ . '/../..';   //Was: $_SERVER['DOCUMENT_ROOT'];
             $this->frameworkRoot = realpath(__DIR__ . DIRECTORY_SEPARATOR . '..' );
             $this->viewRoot = $this->frameworkRoot . DIRECTORY_SEPARATOR . 'views';
             $this->controllerRoot = $this->frameworkRoot . DIRECTORY_SEPARATOR . 'controllers';
             $this->templateRoot = $this->documentRoot . DIRECTORY_SEPARATOR . 'site' . DIRECTORY_SEPARATOR . 'templates';
             $this->siteRoot = $this->documentRoot . DIRECTORY_SEPARATOR . 'site';
+            $this->webRoot = $this->config['webroot'];
             $this->user = new CWebUser();
             $this->requestHandler = CRequestHandler::getInstance();
             $this->responseHandler = CResponseHandler::getInstance();
@@ -103,7 +109,7 @@ defined('ALL_SYSTEMS_GO') or die;
             $this->_javaScript = array('header'=>array(),'body'=>array());
             $this->siteSettings = array();
         }
-        
+
         /**
         * getInstance - returns an instance of the web application
         */
@@ -113,7 +119,7 @@ defined('ALL_SYSTEMS_GO') or die;
             }
             return self::$_instance;
         }
-        
+
         /**
         * run - runs the web application
         */
@@ -127,7 +133,7 @@ defined('ALL_SYSTEMS_GO') or die;
             if(isset($_GET['uri'])) $uriComponents = explode('/',$_GET['uri']);
             else $uriComponents = array();
             array_pop($uriComponents);
-            
+
             $this->includeJavaScriptFiles(array(
                 'jquery-1.10.2.min.js',
                 'bootstrap.min.js',
@@ -168,7 +174,7 @@ defined('ALL_SYSTEMS_GO') or die;
                         $controllerClass = 'C' . $controllerClass . 'Controller';
                         $controller = new $controllerClass();
                         $action = 'action' . implode('',array_map(function($elem) {
-                            return(ucwords($elem));                    
+                            return(ucwords($elem));
                         },explode('-',$actionId)));
                         $controller->onBeforeAction();
                         if(method_exists($controller, $action)) {
@@ -202,10 +208,10 @@ defined('ALL_SYSTEMS_GO') or die;
             $pageHit->setDefaultValues();
             $pageHit->insert();
         }
-        
+
         /**
         * authenticateUser - authenticates a user with the provided login and password
-        * 
+        *
         * @param string $login The login or email address of the user
         * @param string $pass The password of the user
         */
@@ -218,10 +224,10 @@ defined('ALL_SYSTEMS_GO') or die;
             }
             return $success;
         }
-        
+
         /**
         * resetUserPassword - resets the password for a user
-        * 
+        *
         * @param string $login The login or email address of the user
         * @return bool True on success or false on invalid login
         */
@@ -264,10 +270,10 @@ defined('ALL_SYSTEMS_GO') or die;
                 return false;
             }
         }
-        
+
         /**
         * _getAggregateJavaScriptFile - if necessary creates and returns a javascript file which combines all javascript files in the provided array
-        * 
+        *
         * @param array $files - array of JavaScript files to combine
         */
         private function _getAggregateJavaScriptFile($files) {
@@ -290,31 +296,31 @@ defined('ALL_SYSTEMS_GO') or die;
             file_put_contents($this->documentRoot . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . $filename,$aggregate);
             return '/js/' . $filename;
         }
-        
-        
+
+
         /**
         * includeJavaScriptFiles - adds the javascript files to be included at the relevant document position (header or body)
-        * 
+        *
         * @param array $files - array of .js files to add
-        * @param string $location - position in the HTML document to load the files in 
+        * @param string $location - position in the HTML document to load the files in
         */
         public function includeJavaScriptFiles($files,$location = 'body') {
             $this->_javaScriptIncludes[$location] = array_merge($this->_javaScriptIncludes[$location],$files);
         }
-        
+
         /**
         * includeJavaScriptSnippet - adds the provided javascript snippet to the relevant document position (header or body)
-        * 
+        *
         * @param string $snippet
         * @param string $location
         */
         public function includeJavaScriptSnippet($snippet,$location = 'body') {
             $this->_javaScript[$location][] = $snippet;
         }
-        
+
         /**
         * renderHeaderScripts - renders the scripts for in the HTML header
-        * 
+        *
         */
         public function renderHeaderScripts() {
             if(count($this->_javaScriptIncludes['header']) > 0) {
@@ -328,18 +334,17 @@ defined('ALL_SYSTEMS_GO') or die;
 
         /**
         * renderBodyScripts - renders the scripts for in the HTML body
-        * 
+        *
         */
         public function renderBodyScripts() {
             if(count($this->_javaScriptIncludes['body']) > 0) {
                 $file = $this->_getAggregateJavaScriptFile($this->_javaScriptIncludes['body']);
-                echo '<script src="' . $file . '"></script>';
+                echo '<script src="' . $this->webRoot . $file . '"></script>';
             }
             if(count($this->_javaScript['body']) > 0) {
                 echo '<script>' . implode("\r\n",$this->_javaScript['body']) . '</script>';
             }
-            echo '<!--[if lt IE 9]><script src="/js/respond.min.js"></script><![endif]-->';
+            echo '<!--[if lt IE 9]><script src="'. $this->webRoot .'/js/respond.min.js"></script><![endif]-->';
         }
-        
-    }  
-?>
+
+    }
