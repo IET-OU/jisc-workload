@@ -1,34 +1,34 @@
 <?php
 /**
 * CInstitutionController class file
-* 
+*
 * @author Jitse van Ameijde <djitsz@yahoo.com>
-* 
+*
 */
 
 defined('ALL_SYSTEMS_GO') or die;
 /**
 * CInstitutionController implements the controller for actions involving faculties
-* 
-* 
+*
+*
 */
-    class CInstitutionController extends CController {
-        
-        
+    class CInstitutionController extends CExtendController {
+
+
         /**
         *  constructor - initialises variables
-        * 
+        *
         */
         public function __construct() {
             parent::__construct('admin','Default');
         }
-        
-        
+
+
         /**
         * actionView - Default view when no controller or action is selected
-        * 
+        *
         */
-        function actionView() {
+        public function actionView() {
             // If user is authenticated show the overview screen
             if($this->application->user->isAuthenticated() && $this->application->user->isSuperAdministrator()) {
                 $institutions = CInstitutionModel::loadByAttributes(array('deleted'=>null),array('order by'=>'`name` asc'))->getObjectArray();
@@ -40,29 +40,29 @@ defined('ALL_SYSTEMS_GO') or die;
                 $this->application->responseHandler->redirect('/login/');
             }
         }
-        
+
         /**
         * actionAdd - Adds a new institution
-        * 
+        *
         */
-        function actionAdd() {
-            if(!$this->application->user->isAuthenticated()) { 
+        public function actionAdd() {
+            if(!$this->application->user->isAuthenticated()) {
                 $this->application->responseHandler->redirect('/login/');
                 return;
-            }            
+            }
             $institution = null;
             if($this->application->user->isSuperAdministrator()) {
                 $fields = array(
                     'name'=>array('type'=>'textinput','label'=>'Institution name','value'=>'','required'=>true),
                     'submit' => array('type'=>'submit', 'label'=>'Add', 'class'=>'btn-primary')
                 );
-                $validators = array(array('name','required'));                
+                $validators = array(array('name','required'));
             }
             else {
                 return;
             }
             $form = new CForm('add-institution-form','/institution/add/',$fields,$validators,false);
-            
+
             if($form->wasSubmitted()) {
                 if($form->validate()) {
                     $institution = new CInstitutionModel();
@@ -86,16 +86,16 @@ defined('ALL_SYSTEMS_GO') or die;
             $this->attachViewToRegion('main','institution','add',array('form'=>$form,'institution'=>$institution));
             $this->render();
         }
-        
+
         /**
         * actionEdit - Edits an institution
-        * 
+        *
         */
-        function actionEdit() {
-            if(!$this->application->user->isAuthenticated()) { 
+        public function actionEdit() {
+            if(!$this->application->user->isAuthenticated()) {
                 $this->application->responseHandler->redirect('/login/');
                 return;
-            }            
+            }
             // Only Super Administrators can edit institutions
             if(!$this->application->user->isSuperAdministrator()) {
                 return;
@@ -108,9 +108,9 @@ defined('ALL_SYSTEMS_GO') or die;
                     'name'=>array('type'=>'textinput','label'=>'Faculty name','value'=>htmlentities($institution->name,ENT_COMPAT,'utf-8'),'required'=>true),
                     'submit' => array('type'=>'submit', 'label'=>'Save', 'class'=>'btn-primary')
                 );
-                $validators = array(array('institutionId,name','required'));                
+                $validators = array(array('institutionId,name','required'));
                 $form = new CForm('edit-institution-form','/institution/edit/',$fields,$validators,false);
-                
+
                 if($form->wasSubmitted()) {
                     if($form->validate()) {
                         $db = CDatabaseHandler::getInstance();
@@ -138,13 +138,13 @@ defined('ALL_SYSTEMS_GO') or die;
 
         /**
         * actionDelete - Deletes an institution
-        * 
+        *
         */
-        function actionDelete() {
-            if(!$this->application->user->isAuthenticated()) { 
+        public function actionDelete() {
+            if(!$this->application->user->isAuthenticated()) {
                 $this->application->responseHandler->redirect('/login/');
                 return;
-            }            
+            }
             // Only Super Administrators can delete institutions
             if(!$this->application->user->isSuperAdministrator()) {
                 return;
@@ -157,6 +157,5 @@ defined('ALL_SYSTEMS_GO') or die;
                 $this->render();
             }
         }
-    
-    }  
-?>
+
+    }

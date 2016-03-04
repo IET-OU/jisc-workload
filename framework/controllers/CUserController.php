@@ -1,32 +1,32 @@
 <?php
 /**
 * CUserController class file
-* 
+*
 * @author Jitse van Ameijde <djitsz@yahoo.com>
-* 
+*
 */
 
 defined('ALL_SYSTEMS_GO') or die;
 /**
 * CUserController implements the controller for actions involving users
-* 
-* 
+*
+*
 */
-    class CUserController extends CController {
-        
-        
+    class CUserController extends CExtendController {
+
+
         /**
         *  constructor - initialises variables
-        * 
+        *
         */
         public function __construct() {
             parent::__construct('admin','Default');
         }
-        
-        
+
+
         /**
         * actionView - Default view when no controller or action is selected
-        * 
+        *
         */
         function actionView() {
             // If user is authenticated show the overview screen
@@ -45,16 +45,16 @@ defined('ALL_SYSTEMS_GO') or die;
                 $this->application->responseHandler->redirect('/login/');
             }
         }
-        
+
         /**
         * actionAdd - Adds a new user
-        * 
+        *
         */
         function actionAdd() {
-            if(!$this->application->user->isAuthenticated()) { 
+            if(!$this->application->user->isAuthenticated()) {
                 $this->application->responseHandler->redirect('/login/');
                 return;
-            }            
+            }
             $user = null;
             if($this->application->user->isSuperAdministrator()) {
                 $institutions = CInstitutionModel::loadByAttributes(array(),array('order by'=>'`name` asc'))->getObjectArray();
@@ -73,7 +73,7 @@ defined('ALL_SYSTEMS_GO') or die;
                     'accessLevel'=>array('type'=>'select','label'=>'Access level','value'=>2,'options'=>array(array('value'=>0,'label'=>'Super administrator'),array('value'=>1,'label'=>'Administrator'),array('value'=>2,'label'=>'User')),'required'=>true),
                     'submit' => array('type'=>'submit', 'label'=>'Add', 'class'=>'btn-primary')
                 );
-                $validators = array(array('institutionId,login,firstName,lastName,email,password,passwordRepeat,accessLevel','required'));                
+                $validators = array(array('institutionId,login,firstName,lastName,email,password,passwordRepeat,accessLevel','required'));
             }
             else if($this->application->user->isAdministrator()){
                 $fields = array(
@@ -86,7 +86,7 @@ defined('ALL_SYSTEMS_GO') or die;
                     'accessLevel'=>array('type'=>'select','label'=>'Access level','value'=>2,'options'=>array(array('value'=>1,'label'=>'Administrator'),array('value'=>2,'label'=>'User')),'required'=>true),
                     'submit' => array('type'=>'submit', 'label'=>'Add', 'class'=>'btn-primary')
                 );
-                $validators = array(array('login,firstName,lastName,email,password,passwordRepeat,accessLevel','required'));                
+                $validators = array(array('login,firstName,lastName,email,password,passwordRepeat,accessLevel','required'));
             }
             else {
                 $fields = array(
@@ -98,10 +98,10 @@ defined('ALL_SYSTEMS_GO') or die;
                     'passwordRepeat'=>array('type'=>'password','label'=>'Repeat password','value'=>'','required'=>true),
                     'submit' => array('type'=>'submit', 'label'=>'Add', 'class'=>'btn-primary')
                 );
-                $validators = array(array('login,firstName,lastName,email,password,passwordRepeat','required'));                
+                $validators = array(array('login,firstName,lastName,email,password,passwordRepeat','required'));
             }
             $form = new CForm('add-user-form','/user/add/',$fields,$validators,false);
-            
+
             $error = false;
             if($form->wasSubmitted()) {
                 if($form->validate()) {
@@ -111,7 +111,7 @@ defined('ALL_SYSTEMS_GO') or die;
                     $user->lastName = $form->lastName;
                     $user->email = $form->email;
                     if(!is_null($form->accessLevel)) $user->accessLevel = $form->accessLevel;
-                    
+
                     // Make sure that the passwords match
                     if($form->password == $form->passwordRepeat) {
                         $user->password = sha1($form->password);
@@ -154,16 +154,16 @@ defined('ALL_SYSTEMS_GO') or die;
             $this->attachViewToRegion('main','user','add',array('form'=>$form,'user'=>$user));
             $this->render();
         }
-        
+
         /**
         * actionEdit - Edits a user
-        * 
+        *
         */
         function actionEdit() {
-            if(!$this->application->user->isAuthenticated()) { 
+            if(!$this->application->user->isAuthenticated()) {
                 $this->application->responseHandler->redirect('/login/');
                 return;
-            }            
+            }
             $userId = $this->application->requestHandler->requestVar(CRequestHandler::TYPE_INT,'userId');
             if($userId) {
                 $user = CUserModel::loadByPk($userId);
@@ -173,7 +173,7 @@ defined('ALL_SYSTEMS_GO') or die;
                 else if($this->application->user->isAdministrator() && $this->application->user->institutionId == $user->institutionId) $canEdit = true;
                 else if($this->application->user->userId == $user->userId) $canEdit = true;
                 if($canEdit == false) return;
-                
+
                 if($this->application->user->isSuperAdministrator()) {
                     $institutions = CInstitutionModel::loadByAttributes(array(),array('order by'=>'`name` asc'))->getObjectArray();
                     $institutionList = array();
@@ -192,7 +192,7 @@ defined('ALL_SYSTEMS_GO') or die;
                         'accessLevel'=>array('type'=>'select','label'=>'Access level','value'=>$user->accessLevel,'options'=>array(array('value'=>0,'label'=>'Super administrator'),array('value'=>1,'label'=>'Administrator'),array('value'=>2,'label'=>'User')),'required'=>true),
                         'submit' => array('type'=>'submit', 'label'=>'Save', 'class'=>'btn-primary')
                     );
-                    $validators = array(array('userId,institutionId,login,firstName,lastName,email,accessLevel','required'),array('password,passwordRepeat','safe'));                
+                    $validators = array(array('userId,institutionId,login,firstName,lastName,email,accessLevel','required'),array('password,passwordRepeat','safe'));
                 }
                 else if($this->application->user->isAdministrator()){
                     $fields = array(
@@ -206,7 +206,7 @@ defined('ALL_SYSTEMS_GO') or die;
                         'accessLevel'=>array('type'=>'select','label'=>'Access level','value'=>2,'options'=>array(array('value'=>1,'label'=>'Administrator'),array('value'=>2,'label'=>'User')),'required'=>true),
                         'submit' => array('type'=>'submit', 'label'=>'Save', 'class'=>'btn-primary')
                     );
-                    $validators = array(array('userId,login,firstName,lastName,email,accessLevel','required'),array('password,passwordRepeat','safe'));                
+                    $validators = array(array('userId,login,firstName,lastName,email,accessLevel','required'),array('password,passwordRepeat','safe'));
                 }
                 else {
                     $fields = array(
@@ -219,9 +219,9 @@ defined('ALL_SYSTEMS_GO') or die;
                         'passwordRepeat'=>array('type'=>'password','label'=>'Repeat password','value'=>'','required'=>false),
                         'submit' => array('type'=>'submit', 'label'=>'Save', 'class'=>'btn-primary')
                     );
-                    $validators = array(array('login,firstName,lastName,email','required'),array('password,passwordRepeat','safe'));                
+                    $validators = array(array('login,firstName,lastName,email','required'),array('password,passwordRepeat','safe'));
                 }
-                
+
                 $form = new CForm('edit-user-form','/user/edit/',$fields,$validators,false);
                 $error = false;
                 if($form->wasSubmitted()) {
@@ -231,7 +231,7 @@ defined('ALL_SYSTEMS_GO') or die;
                         $user->lastName = $form->lastName;
                         $user->email = $form->email;
                         if(!is_null($form->accessLevel)) $user->accessLevel = $form->accessLevel;
-                        
+
                         // Make sure that the passwords match
                         if($form->password == $form->passwordRepeat) {
                             if($form->password != '') $user->password = sha1($form->password);
@@ -278,16 +278,16 @@ defined('ALL_SYSTEMS_GO') or die;
                 $this->render();
             }
         }
-        
+
         /**
         * actionDelete - Deletes a user
-        * 
+        *
         */
         function actionDelete() {
-            if(!$this->application->user->isAuthenticated()) { 
+            if(!$this->application->user->isAuthenticated()) {
                 $this->application->responseHandler->redirect('/login/');
                 return;
-            }            
+            }
             $userId = $this->application->requestHandler->requestVar(CRequestHandler::TYPE_INT,'userId');
             // Only Administrators can delete users
             if(!$this->application->user->isAdministrator()) {
@@ -307,6 +307,5 @@ defined('ALL_SYSTEMS_GO') or die;
                 $this->render();
             }
         }
-        
-    }  
-?>
+
+    }

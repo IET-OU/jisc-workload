@@ -25,7 +25,7 @@ defined('ALL_SYSTEMS_GO') or die;
         protected $_templateOverride;
 
         protected $application;
-        protected $title;
+        protected $title = '';
 
         /**
         *  constructor - initialises variables
@@ -37,7 +37,6 @@ defined('ALL_SYSTEMS_GO') or die;
             $this->application = CWebApplication::getInstance();
             $this->_viewRegions = array();
             $this->_delegatedController = null;
-            $this->title = '';
             $this->_pageElementTypes = array(
                 'html' => 'HTML markup',
                 'content-node' => 'content node',
@@ -96,7 +95,7 @@ defined('ALL_SYSTEMS_GO') or die;
                     $$name = $value;
                 }
             }
-            $webroot = $this->application->webRoot;
+            $webroot = $this->application->webRoot();
             $template = 'default';
             $templateFile = $this->application->templateRoot . DIRECTORY_SEPARATOR . $template . '.php';
             include($templateFile);
@@ -128,8 +127,9 @@ defined('ALL_SYSTEMS_GO') or die;
         * @param array $viewVars - an array of key=>value pairs which represent variables to be made available to the view
         * @param string $wrapperClass - the class name of an optional container to wrap the view in
         */
-        public function attachViewToRegion($region,$viewCollection, $view,$viewVars = null,$wrapperClass = null) {
+        public function attachViewToRegion($region,$viewCollection, $view,$viewVars = array(), $wrapperClass = null) {
             if(!isset($this->_viewRegions[$region])) $this->_viewRegions[$region] = array();
+            $viewVars[ 'webroot' ] = $this->application->webRoot();
             $this->_viewRegions[$region][] = array('view'=>$view,'viewCollection'=>$viewCollection,'viewVars'=>$viewVars,'wrapperClass'=>$wrapperClass);
         }
 

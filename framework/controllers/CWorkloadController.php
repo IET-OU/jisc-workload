@@ -1,28 +1,28 @@
 <?php
 /**
 * CWorkloadController class file
-* 
+*
 * @author Jitse van Ameijde <djitsz@yahoo.com>
-* 
+*
 */
 
 defined('ALL_SYSTEMS_GO') or die;
 /**
 * CWorkloadController implements the controller for actions involving users
-* 
-* 
+*
+*
 */
-    class CWorkloadController extends CController {
-        
-        
+    class CWorkloadController extends CExtendController {
+
+
         /**
         *  constructor - initialises variables
-        * 
+        *
         */
         public function __construct() {
             parent::__construct('admin','Default');
         }
-        
+
         public static function printWorkloadRow($item,$row,$course) {
             $html = '';
             if($item == null) {
@@ -76,7 +76,7 @@ defined('ALL_SYSTEMS_GO') or die;
             }
             return $html;
         }
-        
+
         public static function printWorkloadSummaryRow($unit) {
             $html = '';
             $html .= '<tr class="summary"><th class="unit-title item" colspan="2">Unit ' . $unit . '</th>';
@@ -94,11 +94,11 @@ defined('ALL_SYSTEMS_GO') or die;
             $html .= '<th class="actions"></th>';
             return $html;
         }
-        
-        
+
+
         /**
         * actionView - Default view when no controller or action is selected
-        * 
+        *
         */
         function actionView() {
             // If user is authenticated show the workload screen
@@ -114,7 +114,7 @@ defined('ALL_SYSTEMS_GO') or die;
                         $collaborators = $this->application->db->select('collaborators','*',array('courseId'=>$courseId,'userId'=>$userId))->getObjectArray();
                         if(count($collaborators) > 0) $canEdit = true;
                     }
-                    $items = CItemModel::loadByAttributes(array('courseId'=>$courseId),array('order by'=>'`order` asc'))->getObjectArray();                    
+                    $items = CItemModel::loadByAttributes(array('courseId'=>$courseId),array('order by'=>'`order` asc'))->getObjectArray();
                     $this->attachViewToRegion('main','workload','view',array('course'=>$course,'items'=>$items));
                     $this->render();
                 }
@@ -127,11 +127,11 @@ defined('ALL_SYSTEMS_GO') or die;
 
         /**
         * actionSave - Save the workload table
-        * 
+        *
         */
         function actionSave() {
             if($this->application->user->isAuthenticated()) {
-                //This is a workaround for the fact that PHP as standard accepts no more than 1000 items as part of a GET / POST request. 
+                //This is a workaround for the fact that PHP as standard accepts no more than 1000 items as part of a GET / POST request.
                 //By encoding all items into a single data item and then decoding this back into the POST array we solve this problem
                 if(isset($_POST['data'])) {
                     $items = explode('&',$_POST['data']);
@@ -188,12 +188,12 @@ defined('ALL_SYSTEMS_GO') or die;
                         if($deletedItems != '') {
                             $items = explode(',',$deletedItems);
                             $this->application->db->delete('items',array('itemId'=>array('in',$items)));
-                        }                        
-                        
+                        }
+
                         $this->application->responseHandler->addJson(array('script'=>array('location.reload(true);'),'result'=>true));
                         $this->application->responseHandler->returnJsonResponse();
                         return;
-                        
+
                     }
                     else {
                         $this->application->responseHandler->addJson(array('script'=>array('alert("You do not have permissions to make changes to this module.");'),'result'=>false));
@@ -209,18 +209,18 @@ defined('ALL_SYSTEMS_GO') or die;
                 return;
             }
         }
-        
+
         /**
         * actionChart - Shows a workload chart for a particular course
-        * 
+        *
         */
         function actionChart() {
             if($this->application->user->isAuthenticated()) {
                 $courseId = $this->application->requestHandler->requestVar(CRequestHandler::TYPE_INT,'courseId');
                 if($courseId) {
                     $course = CCourseModel::loadByPk($courseId);
-                    $items = CItemModel::loadByAttributes(array('courseId'=>$courseId),array('order by'=>'`order` asc'))->getObjectArray();                    
-                    
+                    $items = CItemModel::loadByAttributes(array('courseId'=>$courseId),array('order by'=>'`order` asc'))->getObjectArray();
+
                     $totals = array();
                     $speeds = array($course->wpmLow,$course->wpmMed,$course->wpmHi);
                     foreach($items as $item) {
@@ -268,22 +268,22 @@ defined('ALL_SYSTEMS_GO') or die;
                     $this->attachViewToRegion('main','workload','chart',array('course'=>$course,'totals'=>$totals,'max'=>$max));
                     $this->render();
                 }
-            }            
+            }
             else {
                 $this->application->responseHandler->redirect('/login/');
             }
         }
-        
+
         /**
         * actionExport - Exports workload data to a CSV file
-        * 
+        *
         */
         function actionExport() {
             if($this->application->user->isAuthenticated()) {
                 $courseId = $this->application->requestHandler->requestVar(CRequestHandler::TYPE_INT,'courseId');
                 if($courseId) {
                     $course = CCourseModel::loadByPk($courseId);
-                    $items = CItemModel::loadByAttributes(array('courseId'=>$courseId),array('order by'=>'`order` asc'))->getObjectArray();                    
+                    $items = CItemModel::loadByAttributes(array('courseId'=>$courseId),array('order by'=>'`order` asc'))->getObjectArray();
 
                     header('Content-type: text/csv');
                     header('Content-Disposition: attachment; filename="workload-items.csv"');
@@ -322,7 +322,7 @@ defined('ALL_SYSTEMS_GO') or die;
                         $this->application->responseHandler->serveCSVLine($array);
                     }
                 }
-            }            
+            }
             else {
                 $this->application->responseHandler->redirect('/login/');
             }
@@ -330,14 +330,14 @@ defined('ALL_SYSTEMS_GO') or die;
 
         /**
         * actionExportSummary - Exports workload summary data to a CSV file
-        * 
+        *
         */
         function actionExportSummary() {
             if($this->application->user->isAuthenticated()) {
                 $courseId = $this->application->requestHandler->requestVar(CRequestHandler::TYPE_INT,'courseId');
                 if($courseId) {
                     $course = CCourseModel::loadByPk($courseId);
-                    $items = CItemModel::loadByAttributes(array('courseId'=>$courseId),array('order by'=>'`order` asc'))->getObjectArray();                    
+                    $items = CItemModel::loadByAttributes(array('courseId'=>$courseId),array('order by'=>'`order` asc'))->getObjectArray();
 
                     header('Content-type: text/csv');
                     header('Content-Disposition: attachment; filename="workload-summary.csv"');
@@ -409,11 +409,10 @@ defined('ALL_SYSTEMS_GO') or die;
                         $this->application->responseHandler->serveCSVLine($array);
                     }
                 }
-            }            
+            }
             else {
                 $this->application->responseHandler->redirect('/login/');
             }
         }
-    
-    }  
-?>
+
+    }

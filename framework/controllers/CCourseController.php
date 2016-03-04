@@ -15,7 +15,7 @@ defined('ALL_SYSTEMS_GO') or die;
 *
 *
 */
-    class CCourseController extends CController {
+    class CCourseController extends CExtendController {
 
 
         /**
@@ -24,6 +24,9 @@ defined('ALL_SYSTEMS_GO') or die;
         */
         public function __construct() {
             parent::__construct('admin','Default');
+
+            $this->attachViewToRegion('googleAnalytics', 'default', 'googleAnalytics',
+                array('analyticsId' => $this->application->config[ 'googleAnalyticsId' ]));
         }
 
 

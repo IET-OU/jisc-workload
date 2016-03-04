@@ -17,11 +17,11 @@
         }
     ?>
     <!--[if lt IE 9]>
-        <script src="<?php echo $webroot ?>/js/html5shiv.js"></script>
+        <script src="<?= $webroot ?>/js/html5shiv.js"></script>
     <![endif]-->
     <!--<link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">-->
-    <link href="<?php echo $webroot ?>/css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <link href="<?php echo $webroot ?>/css/styles.css" rel="stylesheet" media="screen">
+    <link href="<?= $webroot ?>/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="<?= $webroot ?>/css/styles.css" rel="stylesheet" media="screen">
     <?php
         $this->application->renderHeaderScripts();
     ?>
@@ -41,9 +41,9 @@
                     <div class="col-xs-12 workload-header" role="banner">
                         <h1>Student Workload Tool</h1>
                         <div class="logos">
-                            <a href="https://www.jisc.ac.uk/"><img src="<?php echo $webroot ?>/css/img/jisc-logo.png" alt="Jisc" title="Jisc"></a>
-                            <a href="http://www.open.ac.uk/"><img src="<?php echo $webroot ?>/css/img/ou-logo.png" alt="The Open University" title="The Open University"></a>
-                            <a href="<?php echo $webroot ?>/logout/"><img src="<?php echo $webroot ?>/css/img/logout.png" alt="Logout" title="Logout"></a>
+                            <a href="https://www.jisc.ac.uk/"><img src="<?= $webroot ?>/css/img/jisc-logo.png" alt="Jisc" title="Jisc"></a>
+                            <a href="http://www.open.ac.uk/"><img src="<?= $webroot ?>/css/img/ou-logo.png" alt="The Open University" title="The Open University"></a>
+                            <a href="<?= $webroot ?>/logout/"><img src="<?= $webroot ?>/css/img/logout.png" alt="Logout" title="Logout"></a>
                         </div>
                     </div>
                 </div>
@@ -68,11 +68,11 @@
         <?php
             if(!isset($_SESSION['acceptedCookies']) || $_SESSION['acceptedCookies'] == false):
         ?>
-            <div class="cookies-notice" role="alert"><table><tbody><tr><td><img src="<?php echo $webroot ?>/css/img/cookies.png" alt="" /></td>
+            <div class="cookies-notice" role="alert"><table><tbody><tr><td><img src="<?= $webroot ?>/css/img/cookies.png" alt="" /></td>
             <td>This site uses <a href="http://en.wikipedia.org/wiki/HTTP_cookie" target="_blank">cookies</a>.
             These cookies store small bits of anonymous data on how visitors use this website.
             By using this website you agree that we place these cookies on your device.
-            <a href="<?php echo $webroot ?>/accept-cookies/">Hide this notice</a></td></tr></tbody></table></div>
+            <a href="<?= $webroot ?>/accept-cookies/">Hide this notice</a></td></tr></tbody></table></div>
         <?php
             endif;
         ?>

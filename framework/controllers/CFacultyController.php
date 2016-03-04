@@ -1,34 +1,34 @@
 <?php
 /**
 * CFacultyController class file
-* 
+*
 * @author Jitse van Ameijde <djitsz@yahoo.com>
-* 
+*
 */
 
 defined('ALL_SYSTEMS_GO') or die;
 /**
 * CFacultyController implements the controller for actions involving faculties
-* 
-* 
+*
+*
 */
-    class CFacultyController extends CController {
-        
-        
+    class CFacultyController extends CExtendController {
+
+
         /**
         *  constructor - initialises variables
-        * 
+        *
         */
         public function __construct() {
             parent::__construct('admin','Default');
         }
-        
-        
+
+
         /**
         * actionView - Default view when no controller or action is selected
-        * 
+        *
         */
-        function actionView() {
+        public function actionView() {
             // If user is authenticated show the overview screen
             if($this->application->user->isAuthenticated()) {
                 if($this->application->user->isSuperAdministrator()) {
@@ -45,16 +45,16 @@ defined('ALL_SYSTEMS_GO') or die;
                 $this->application->responseHandler->redirect('/login/');
             }
         }
-        
+
         /**
         * actionAdd - Adds a new faculty
-        * 
+        *
         */
-        function actionAdd() {
-            if(!$this->application->user->isAuthenticated()) { 
+        public function actionAdd() {
+            if(!$this->application->user->isAuthenticated()) {
                 $this->application->responseHandler->redirect('/login/');
                 return;
-            }            
+            }
             $faculty = null;
             if($this->application->user->isSuperAdministrator()) {
                 $institutions = CInstitutionModel::loadByAttributes(array(),array('order by'=>'`name` asc'))->getObjectArray();
@@ -67,7 +67,7 @@ defined('ALL_SYSTEMS_GO') or die;
                     'name'=>array('type'=>'textinput','label'=>'Faculty name','value'=>'','required'=>true),
                     'submit' => array('type'=>'submit', 'label'=>'Add', 'class'=>'btn-primary')
                 );
-                $validators = array(array('institutionId,name','required'));                
+                $validators = array(array('institutionId,name','required'));
             }
             else {
                 $fields = array(
@@ -77,7 +77,7 @@ defined('ALL_SYSTEMS_GO') or die;
                 $validators =  array(array('name','required'));
             }
             $form = new CForm('add-faculty-form','/faculty/add/',$fields,$validators,false);
-            
+
             if($form->wasSubmitted()) {
                 if($form->validate()) {
                     $faculty = new CFacultyModel();
@@ -90,7 +90,7 @@ defined('ALL_SYSTEMS_GO') or die;
                     }
                     $faculty->setDefaultValues();
                     $faculty->insert();
-                    
+
                 }
                 else {
                     $form->setMessage('Please correct the indicated errors in the form.');
@@ -99,16 +99,16 @@ defined('ALL_SYSTEMS_GO') or die;
             $this->attachViewToRegion('main','faculty','add',array('form'=>$form,'faculty'=>$faculty));
             $this->render();
         }
-        
+
         /**
         * actionEdit - Edits a faculty
-        * 
+        *
         */
-        function actionEdit() {
-            if(!$this->application->user->isAuthenticated()) { 
+        public function actionEdit() {
+            if(!$this->application->user->isAuthenticated()) {
                 $this->application->responseHandler->redirect('/login/');
                 return;
-            }            
+            }
             $facultyId = $this->application->requestHandler->requestVar(CRequestHandler::TYPE_INT,'facultyId');
             if($facultyId) {
                 $faculty = CFacultyModel::loadByPk($facultyId);
@@ -128,7 +128,7 @@ defined('ALL_SYSTEMS_GO') or die;
                         'name'=>array('type'=>'textinput','label'=>'Faculty name','value'=>htmlentities($faculty->name,ENT_COMPAT,'utf-8'),'required'=>true),
                         'submit' => array('type'=>'submit', 'label'=>'Save', 'class'=>'btn-primary')
                     );
-                    $validators = array(array('facultyId,institutionId,name','required'));                
+                    $validators = array(array('facultyId,institutionId,name','required'));
                 }
                 else {
                     $fields = array(
@@ -139,7 +139,7 @@ defined('ALL_SYSTEMS_GO') or die;
                     $validators =  array(array('facultyId,name','required'));
                 }
                 $form = new CForm('edit-faculty-form','/faculty/edit/',$fields,$validators,false);
-                
+
                 if($form->wasSubmitted()) {
                     if($form->validate()) {
                         $faculty->name = $form->name;
@@ -150,7 +150,7 @@ defined('ALL_SYSTEMS_GO') or die;
                             $faculty->institutionId = $this->application->user->institutionId;
                         }
                         $faculty->setDefaultValues();
-                        $faculty->update();                        
+                        $faculty->update();
                     }
                     else {
                         $form->setMessage('Please correct the indicated errors in the form.');
@@ -161,16 +161,16 @@ defined('ALL_SYSTEMS_GO') or die;
                 $this->render();
             }
         }
-        
+
         /**
         * actionDelete - Deletes a faculty
-        * 
+        *
         */
-        function actionDelete() {
-            if(!$this->application->user->isAuthenticated()) { 
+        public function actionDelete() {
+            if(!$this->application->user->isAuthenticated()) {
                 $this->application->responseHandler->redirect('/login/');
                 return;
-            }            
+            }
             $facultyId = $this->application->requestHandler->requestVar(CRequestHandler::TYPE_INT,'facultyId');
             // Only Administrators can delete faculties
             if(!$this->application->user->isAdministrator()) {
@@ -187,6 +187,5 @@ defined('ALL_SYSTEMS_GO') or die;
                 $this->render();
             }
         }
-        
-    }  
-?>
+
+    }

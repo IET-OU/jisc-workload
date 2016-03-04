@@ -1,6 +1,6 @@
 <div class="col-sm-9">
     <h2>Course list</h2>
-        <a href="/course/add/" title="Add a new course">Add a new course</a>
+        <a href="<?= $webroot ?>/course/add/" title="Add a new course">Add a new course</a>
         <table class="table">
             <tr>
                 <th>Code</th>
@@ -30,17 +30,17 @@
                 echo '<a href="/workload/export-summary/?courseId=' . $course->courseId . '">export&nbsp;summary</a>';
                 echo '</td></tr>';
             }
-            
+
         }
-?>    
+?>
         </table>
 </div>
 
-<div class="col-sm-3">
+<div class="col-sm-3" role="navigation">
     <h2>Users</h2>
     <ul class="list">
-        <li><a href="/user/add/" title="Add new user">Add a new user</a></li>
-        <li><a href="/user/view/" title="List users">List users</a></li>
+        <li><a href="<?= $webroot ?>/user/add/" title="Add new user">Add a new user</a></li>
+        <li><a href="<?= $webroot ?>/user/view/" title="List users">List users</a></li>
     </ul>
 <?php
     if($this->application->user->isSuperAdministrator()) {

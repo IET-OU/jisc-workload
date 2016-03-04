@@ -60,11 +60,6 @@ defined('ALL_SYSTEMS_GO') or die;
         public $siteRoot;
 
         /**
-        * @var string $webRoot - the web root URL path
-        */
-        public $webRoot;
-
-        /**
         * @var array The configuration array for this web application instance
         */
         public $config;
@@ -101,7 +96,6 @@ defined('ALL_SYSTEMS_GO') or die;
             $this->controllerRoot = $this->frameworkRoot . DIRECTORY_SEPARATOR . 'controllers';
             $this->templateRoot = $this->documentRoot . DIRECTORY_SEPARATOR . 'site' . DIRECTORY_SEPARATOR . 'templates';
             $this->siteRoot = $this->documentRoot . DIRECTORY_SEPARATOR . 'site';
-            $this->webRoot = $this->config['webroot'];
             $this->user = new CWebUser();
             $this->requestHandler = CRequestHandler::getInstance();
             $this->responseHandler = CResponseHandler::getInstance();
@@ -339,12 +333,19 @@ defined('ALL_SYSTEMS_GO') or die;
         public function renderBodyScripts() {
             if(count($this->_javaScriptIncludes['body']) > 0) {
                 $file = $this->_getAggregateJavaScriptFile($this->_javaScriptIncludes['body']);
-                echo '<script src="' . $this->webRoot . $file . '"></script>';
+                echo '<script src="' . $this->webRoot() . $file . '"></script>';
             }
             if(count($this->_javaScript['body']) > 0) {
                 echo '<script>' . implode("\r\n",$this->_javaScript['body']) . '</script>';
             }
-            echo '<!--[if lt IE 9]><script src="'. $this->webRoot .'/js/respond.min.js"></script><![endif]-->';
+            echo '<!--[if lt IE 9]><script src="'. $this->webRoot() .'/js/respond.min.js"></script><![endif]-->';
         }
 
+        /**
+        * webRoot - Get the web root URL path.
+        * @return string
+        */
+        public function webRoot() {
+            return $this->config[ 'webroot' ];
+        }
     }

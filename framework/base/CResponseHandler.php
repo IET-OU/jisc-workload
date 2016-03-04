@@ -1,25 +1,25 @@
 <?php
 /**
 * CResponseHandler class file
-* 
+*
 * @author Jitse van Ameijde <djitsz@yahoo.com>
 * @copyright Copyright &copy; 2013 Quantum Frog Ltd
-* 
+*
 */
 
 defined('ALL_SYSTEMS_GO') or die;
 /**
 * CResponseHandler provides functionality for managing the server response
-* 
-* 
+*
+*
 */
     class CResponseHandler {
-        
+
         /**
         * @var mixed The response handler instance
         */
         private static $_instance = null;
-        
+
         /**
         * @var array Array to send back to the client
         */
@@ -31,7 +31,7 @@ defined('ALL_SYSTEMS_GO') or die;
         public function __construct() {
             $this->_jsonResponse = array();
         }
-        
+
         /**
         * getInstance - returns an instance of the response handler
         */
@@ -41,14 +41,14 @@ defined('ALL_SYSTEMS_GO') or die;
             }
             return self::$_instance;
         }
-        
+
         /**
         * mimeType - returns the MIME type for a given file
-        * 
+        *
         * @param string $path The file for which to return the MIME type
         * @return string MIME type
         */
-        
+
         public static function mimeType($path) {
             preg_match("|\.([a-z0-9]{2,4})$|i", $path, $fileSuffix);
 
@@ -90,9 +90,9 @@ defined('ALL_SYSTEMS_GO') or die;
                 default :
                     return 'unknown/' . trim($fileSuffix[0], '.');
             }
-            
+
         }
-        
+
         /**
          * Serves the file indicated by the path to the client as the filename specified by
          * serveAsFilename. Path is relative to the site root.
@@ -102,18 +102,18 @@ defined('ALL_SYSTEMS_GO') or die;
          * @param     string $path indicating the path to the file relative to the site root
          * @return    none
          */
-         
+
          function serveFile($serveAsFilename,$path) {
             /*header('Content-Disposition: attachment;filename=' . $serveAsFilename );
             header('X-Sendfile: ' . $path);*/
             header('Content-type: ' . CResponseHandler::mimeType($path));
             header('Content-Disposition: attachment; filename="' . $serveAsFilename . '"');
-            readfile($path);         
+            readfile($path);
          }
-         
+
          /**
          * addJSON - adds the specified array to the JSON response
-         * 
+         *
          * @param array $array - array with information to add
          */
          function addJson($array) {
@@ -127,12 +127,12 @@ defined('ALL_SYSTEMS_GO') or die;
          * @param     string/JSON $json indicating the the JSON to send, provided either as a string or an associative array
          * @return    none
          */
-         
+
          function serveJson($json) {
             if (isset($_SERVER['HTTP_ACCEPT']) &&
                 (strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)) {
                 header('Content-type: application/json');
-            } 
+            }
             else {
                 header('Content-type: text/plain');
             }
@@ -141,10 +141,10 @@ defined('ALL_SYSTEMS_GO') or die;
             header('Cache-Control: no-cache, must-revalidate');
             echo(json_encode($json));
          }
-         
+
          /**
          * returnJSONResponse - returns the generated JSON response to the client
-         * 
+         *
          */
          function returnJsonResponse() {
              $this->serveJson($this->_jsonResponse);
@@ -152,7 +152,7 @@ defined('ALL_SYSTEMS_GO') or die;
 
          /**
          * serveCSVLine - serves a CSV file line to the client
-         * 
+         *
          */
          function serveCSVLine($array) {
              $first = true;
@@ -163,15 +163,14 @@ defined('ALL_SYSTEMS_GO') or die;
              }
              echo "\r\n";
          }
-         
+
         /**
         * redirect - redirects the user to the specified url
-        * 
+        *
         * @param string $url - the url to redirect the user to
         */
         public function redirect($url) {
-            header('Location: ' . $url);
-            die;            
+            header('Location: ' . CWebApplication::getInstance()->webRoot() . $url);
+            die;
         }
     }
-?>

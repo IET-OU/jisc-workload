@@ -1,40 +1,40 @@
 <?php
 /**
 * CForm class file
-* 
+*
 * @author Jitse van Ameijde <djitsz@yahoo.com>
 * @copyright Copyright &copy; 2013 Quantum Frog Ltd
-* 
+*
 */
 
 defined('ALL_SYSTEMS_GO') or die;
 /**
 * CForm provides functionality for creating and handling web forms
-* 
-* 
+*
+*
 */
     class CForm implements IteratorAggregate, ArrayAccess {
-        
+
         /**
         * @var string $_name The name of this form
         */
         protected $_name;
-        
+
         /**
         * @var string $_action The action for this form
         */
         protected $_action;
-        
+
         /**
         * @var array $_fields The fields within this form
         */
         protected $_fields;
-        
+
         /**
         * @var string $_formId The form id
         */
         protected $_formId;
-        
+
         /**
         * @var array _validators The validators which check the input of the form fields
         */
@@ -49,15 +49,15 @@ defined('ALL_SYSTEMS_GO') or die;
         * @var string $_formMessage Message to display at the top of the form
         */
         protected $_formMessage;
-        
+
         /**
         * @var bool $_ajax Whether or not ajax should be used to submit this form
         */
         protected $_ajax;
-        
+
         /**
         * Constructor - initialises variables
-        * 
+        *
         * @param string $name Name of the form
         * @param string $action Action to perform on form submission
         * @param array $fields Array of fields within this form
@@ -67,7 +67,7 @@ defined('ALL_SYSTEMS_GO') or die;
         */
         public function __construct($name, $action, $fields, $validators, $ajax) {
             $this->_name = $name;
-            $this->_action = $action;
+            $this->_action = CWebApplication::getInstance()->webRoot() . $action;
             $this->_fields = $fields;
             $this->_validators = $validators;
             $this->_formMessage = null;
@@ -83,15 +83,15 @@ defined('ALL_SYSTEMS_GO') or die;
                 }
             }
         }
-        
+
         /**
         * wasSubmitted - returns true if this form was just submitted
-        * 
+        *
         */
         function wasSubmitted() {
             return $_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['_formId']) && $_POST['_formId'] == sha1($this->_name);
         }
-        
+
         /**
         * validate - validate the form using the provided validation rules
         * @return true on success, false on failure
@@ -195,7 +195,7 @@ defined('ALL_SYSTEMS_GO') or die;
                                 if(isset($_POST[$field]) && strlen($_POST[$field]) > 0 && (!filter_var($_POST[$field],FILTER_VALIDATE_EMAIL) || !preg_match('/@.+\./', $_POST[$field]))) {
                                     $success = false;
                                     $this->_fields[$field]['error'] = 'Please enter a valid email address';
-                                }                                
+                                }
                             }
                             break;
                     }
@@ -222,13 +222,13 @@ defined('ALL_SYSTEMS_GO') or die;
                     $overallSuccess = $overallSuccess && $success;
                 }
             }
-            
+
             return $overallSuccess;
         }
-        
+
         /**
         * populateFromModel - populates the form fields with values from the provided model
-        * 
+        *
         * @param mixed $model - the model (or array) from which to populate the form values
         */
         function populateFromModel($model) {
@@ -261,16 +261,16 @@ defined('ALL_SYSTEMS_GO') or die;
 
         /**
         * populateFromArray - populates the form fields with values from the provided array
-        * 
+        *
         * @param mixed $array - the array from which to populate the form values
         */
         function populateFromArray($array) {
             $this->populateFromModel($array);
         }
-        
+
         /**
         * setMessage - sets the message to display at the top of the form
-        * 
+        *
         * @param string $message - the message to display at the top of the form
         */
         function setMessage($message) {
@@ -284,7 +284,7 @@ defined('ALL_SYSTEMS_GO') or die;
         function getMessage() {
             return $this->_formMessage;
         }
-        
+
         /**
         * getName - returns the name of the form
         * @return string
@@ -292,7 +292,7 @@ defined('ALL_SYSTEMS_GO') or die;
         function getName() {
             return $this->_name;
         }
-        
+
         /**
         * getAction - returns the action of the form
         * @return string
@@ -300,7 +300,7 @@ defined('ALL_SYSTEMS_GO') or die;
         function getAction() {
             return $this->_action;
         }
-        
+
         /**
         * getAction - returns the ID of the form
         * @return string
@@ -308,7 +308,7 @@ defined('ALL_SYSTEMS_GO') or die;
         function getFormId() {
             return $this->_formId;
         }
-        
+
         /**
         * isAjax - returns true if Ajax should be used to submit this form
         * @return bool
@@ -316,7 +316,7 @@ defined('ALL_SYSTEMS_GO') or die;
         function isAjax() {
             return $this->_ajax;
         }
-        
+
         /**
         * getValidatedValues - returns the array of validated form values
         * @return array
@@ -324,10 +324,10 @@ defined('ALL_SYSTEMS_GO') or die;
         function getValidatedValues() {
             return $this->_validatedValues;
         }
-        
+
         /**
         * __get magic method
-        * 
+        *
         */
         function __get($property) {
             if($this->_validatedValues == null) return null;
@@ -338,27 +338,27 @@ defined('ALL_SYSTEMS_GO') or die;
                 return null;
             }
         }
-        
+
         /**
         * __set magic method
-        * 
+        *
         */
         function __set($property,$value) {
             $this->_validatedValues[$property] = $value;
             $this->_fields[$property]['value'] = $value;
         }
-        
+
         /**
         * offsetExists - implements the ArrayAccess interface and returns true if the given offset exists in the array of form elements
-        * @return boolean 
+        * @return boolean
         */
         function offsetExists($offset) {
             return array_key_exists($offset,$this->_fields);
         }
-        
+
         /**
         * offsetGet - implements the ArrayAccess interface and returns the item at the given offset
-        * @return boolean 
+        * @return boolean
         */
         function offsetGet($offset) {
             return $this->_fields[$offset];
@@ -366,7 +366,7 @@ defined('ALL_SYSTEMS_GO') or die;
 
         /**
         * offsetSet - implements the ArrayAccess interface and sets the object at the given offset to the provided value
-        * @return boolean 
+        * @return boolean
         */
         function offsetSet($offset,$value) {
             $this->_fields[$offset] = $value;
@@ -386,5 +386,4 @@ defined('ALL_SYSTEMS_GO') or die;
         function getIterator() {
             return new ArrayIterator($this->_fields);
         }
-    }  
-?>
+    }
