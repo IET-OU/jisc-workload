@@ -2,6 +2,9 @@
   Jisc/OU Student Workload Tool.
   License: GPL-3.0+ | Jitse van Ameijde | © 2015 The Open University.
 */
+
+'use strict';
+
 var studySpeeds=[35,70,120];
 var defaultStudySpeed = 1;
 var unsavedChanges = false;

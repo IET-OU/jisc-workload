@@ -20,8 +20,9 @@ before_script:
   - composer setup-config
 
 script:
-  - ./vendor/bin/parallel-lint --exclude vendor .
-  - ./vendor/bin/phpcs --standard=PSR2 -n --encoding=utf-8 --extensions=php index.php
+  - composer validate --no-interaction
+  - composer lint
+  - ./vendor/bin/phpcs --standard=./phpcs.xml -n --encoding=utf-8 --extensions=php index.php
 
 notifications:
   #- iet-webmaster@open.ac.uk

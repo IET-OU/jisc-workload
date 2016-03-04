@@ -1,6 +1,6 @@
 {
   "name": "iet-ou/jisc-workload",
-  "description": "A web-based tool for recording, visualising and managing student workload on courses, developed by The Open University.",
+  "description": "A web-based tool for recording, visualising and managing student workload on courses, developed by The Open University (IET).",
   "type": "project",
   "keywords": [ "Jisc", "student", "OpenUniversity", "IET-OU" ],
   "license": "GPL-3.0+",
@@ -9,6 +9,7 @@
     { "name": "Jitse van Ameijde" }
   ],
   "support": {
+    "issues": "https://github.com/IET-OU/jisc-workload/issues",
     "source": "https://github.com/IET-OU/jisc-workload"
   },
   "require": {
@@ -26,12 +27,12 @@
       "cp -n framework/tables.DIST.sql framework/tables.sql",
       "cp -n site/config/config.DIST.php site/config/config.php"
     ],
+    "lint": [
+      "./vendor/bin/parallel-lint --exclude vendor ."
+    ],
     "test": [
-      "# composer validate --no-interaction",
-      "./vendor/bin/parallel-lint --exclude vendor .",
-      "# phpcs --standard=PSR2 -n --encoding=utf-8 --extensions=php framework/base/CController.*",
-      "# phpcs --standard=PSR2 -n --encoding=utf-8 --extensions=php framework/controllers/CDefaultController.*",
-      "phpcs --standard=PSR2 -n --encoding=utf-8 --extensions=php index.php"
+      "phpcs --standard=./phpcs.xml -n --encoding=utf-8 --extensions=php framework/base/CController.*",
+      "phpcs --standard=./phpcs.xml -n --encoding=utf-8 --extensions=php framework/controllers/"
     ],
     "fix": [
       "phpcbf --standard=PSR2 -n --encoding=utf-8 index.php"
