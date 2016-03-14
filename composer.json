@@ -6,9 +6,10 @@
   "license": "GPL-3.0+",
   "time": "2015-10-25",
   "authors": [
-    { "name": "Jitse van Ameijde" }
+    { "name": "Jitse van Ameijde", "role": "developer" }
   ],
   "support": {
+    "email": "Jitse.van.Ameijde@open.ac.uk; iet-webmaster@open.ac.uk",
     "issues": "https://github.com/IET-OU/jisc-workload/issues",
     "source": "https://github.com/IET-OU/jisc-workload"
   },

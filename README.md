@@ -1,4 +1,5 @@
 [![Build status — Travis-CI][travis-icon]][travis]
+[![Code Climate][climate-icon]][climate]
 
 # Jisc Student Workload Tool
 
@@ -13,6 +14,7 @@ developed by The Open University ([IET][]) with support from [Jisc][] micro-proj
 - Apache 2.2+ (`mod_rewrite`)
 - PHP 5.4+ (JSON enabled)
     * [Composer][]
+- MySQL
 
 ## Installation
 
@@ -45,6 +47,7 @@ You should now be able to access the tool on the domain name linked to the web s
 
 * Contributors:  [@djitsz][] (original developer)
 * Bundled libraries:  jQuery, Bootstrap, PHP [SwiftMailer][].
+* Funding: [Jisc][]
 
 ## License
 
@@ -69,5 +72,7 @@ You should now be able to access the tool on the domain name linked to the web s
 
 [travis]: https://travis-ci.org/IET-OU/jisc-workload "Build status — Travis-CI"
 [travis-icon]: https://travis-ci.org/IET-OU/jisc-workload.svg
+[climate]: https://codeclimate.com/github/IET-OU/jisc-workload "Code Climate"
+[climate-icon]: https://codeclimate.com/github/IET-OU/jisc-workload/badges/gpa.svg
 
 [End]: //end.
