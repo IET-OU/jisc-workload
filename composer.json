@@ -2,14 +2,15 @@
   "name": "iet-ou/jisc-workload",
   "description": "A web-based tool for recording, visualising and managing student workload on courses, developed by The Open University (IET).",
   "type": "project",
-  "keywords": [ "Jisc", "student", "OpenUniversity", "IET-OU" ],
+  "keywords": [ "Jisc", "student", "education", "OpenUniversity", "IET-OU" ],
   "license": "GPL-3.0+",
   "time": "2015-10-25",
   "authors": [
-    { "name": "Jitse van Ameijde", "role": "developer" }
+    { "name": "Jitse van Ameijde", "role": "developer", "email": "Jitse.van.Ameijde@open.ac.uk" },
+    { "name": "Nick Freear", "role": "developer" }
   ],
   "support": {
-    "email": "Jitse.van.Ameijde@open.ac.uk; iet-webmaster@open.ac.uk",
+    "email": "IET-Webmaster@open.ac.uk",
     "issues": "https://github.com/IET-OU/jisc-workload/issues",
     "source": "https://github.com/IET-OU/jisc-workload"
   },
