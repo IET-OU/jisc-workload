@@ -28,11 +28,17 @@ class CExtendController extends CController
             array('analyticsId' => $this->application->config[ 'googleAnalyticsId' ]));
     }
 
+    /**
+    * @return string  Return a HTTP GET parameter.
+    */
     protected function getParam($key, $filter = FILTER_SANITIZE_STRING) {
-        return filter_input(INPUT_POST, $key, FILTER_SANITIZE_STRING);
+        return filter_input(INPUT_POST, $key, $filter);
     }
 
+    /**
+    * @return string  Return a HTTP POST value.
+    */
     protected function post($key, $filter = FILTER_SANITIZE_STRING) {
-        return filter_input(INPUT_POST, $key, FILTER_SANITIZE_STRING);
+        return filter_input(INPUT_POST, $key, $filter);
     }
 }

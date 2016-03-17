@@ -41,9 +41,9 @@ defined('ALL_SYSTEMS_GO') or die;
         */
         public function start() {
              session_start();
-             if(!isset($_SESSION['created']) || !isset($_SESSION['session'])) {
-                 $_SESSION['created'] = time();
-                 $_SESSION['user'] = null;
+             if(! $this->session('created') || ! $this->session('session')) {
+                 $this->put('created', time());
+                 $this->put('user');
                  if(is_numeric($this->cookie('visitorId')) && $visitor = CVisitorModel::loadByPk($this->cookie('visitorId'))) {
                      $visitor->setDefaultValues();
                      $visitor->update();
@@ -54,7 +54,7 @@ defined('ALL_SYSTEMS_GO') or die;
                      $visitor->setDefaultValues();
                      $visitor->insert();
                  }
-                 setcookie('visitorId', $visitor->visitorId,time() + 60*60*24*365,'/');
+                 setcookie('visitorId', $visitor->visitorId, time() + 60*60*24*365, '/');
                  $session = new CSessionModel();
                  $session->userId = null;
                  $session->visitorId = $visitor->visitorId;
@@ -62,16 +62,44 @@ defined('ALL_SYSTEMS_GO') or die;
                  $session->referrer = $this->server('HTTP_REFERER');
                  $session->setDefaultValues();
                  $session->insert();
-                 $_SESSION['session'] = $session;
-                 $_SESSION['acceptedCookies'] = $visitor->acceptedCookies;
+
+                 $this->put('session', $session);
+                 $this->put('acceptedCookies', $visitor->acceptedCookies);
              }
         }
 
-        protected function server($key, $filter = FILTER_SANITIZE_STRING) {
-            return filter_input(INPUT_SERVER, $key, FILTER_SANITIZE_STRING);
+        /** Add a key to the session.
+        */
+        public function put($key, $value = null) {
+            //Was: $value = $value ? $value : (object) array();
+            $_SESSION[ $key ] = $value;
         }
 
+        /** Get a reference to THE session.
+        */
+        public function theSession() {
+            return $this->session('session');
+        }
+
+        /** Get a reference to another key in the session.
+        */
+        public function session($key, $filter = FILTER_SANITIZE_STRING) {
+            $value = isset($_SESSION[ $key ]) ? $_SESSION[ $key ] : null;
+            //Was: return filter_var($value, $filter);
+            return $value;
+        }
+
+        /**
+        * @return string  Return a HTTP server value.
+        */
+        protected function server($key, $filter = FILTER_SANITIZE_STRING) {
+            return filter_input(INPUT_SERVER, $key, $filter);
+        }
+
+        /**
+        * @return string  Return a HTTP cookie value.
+        */
         protected function cookie($key, $filter = FILTER_SANITIZE_STRING) {
-            return filter_input(INPUT_COOKIE, $key, FILTER_SANITIZE_STRING);
+            return filter_input(INPUT_COOKIE, $key); //, $filter);
         }
     }

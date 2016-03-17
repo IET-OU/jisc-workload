@@ -78,8 +78,10 @@ defined('ALL_SYSTEMS_GO') or die;
                     $max = count(CWebApplication::getInstance()->config['captcha']);
                     if($max > 1) $index = rand(0, $max);
                     else $index = 0;
-                    if(!isset($_SESSION['captchas'])) $_SESSION['captchas'] = array();
-                    $_SESSION['captchas'][$name] = array('index'=>$index,'answer'=>CWebApplication::getInstance()->config['captcha'][$index]['answer']);
+
+                    $this->initCaptcha();
+                    $this->putCaptcha($name, array('index'=>$index,'answer'=>CWebApplication::getInstance()->config['captcha'][$index]['answer']));
+                    //Was: $_SESSION['captchas'][$name] = array('index'=>$index,'answer'=>CWebApplication::getInstance()->config['captcha'][$index]['answer']);
                 }
             }
         }
@@ -88,7 +90,7 @@ defined('ALL_SYSTEMS_GO') or die;
         * wasSubmitted - returns true if this form was just submitted
         *
         */
-        function wasSubmitted() {
+        public function wasSubmitted() {
             return $this->server('REQUEST_METHOD') == 'POST' && $this->post('_formId') == sha1($this->_name);
         }
 
@@ -96,7 +98,7 @@ defined('ALL_SYSTEMS_GO') or die;
         * validate - validate the form using the provided validation rules
         * @return true on success, false on failure
         */
-        function validate() {
+        public function validate() {
             $overallSuccess = true;
             foreach($this->_fields as $field => $specs) {
                 if($specs['type'] == 'checkboxGroup') {
@@ -111,9 +113,9 @@ defined('ALL_SYSTEMS_GO') or die;
                     $this->_fields[$field]['checkboxAddon']['checked'] = $state;
                 }
                 if($specs['type'] == 'captcha') {
-                    if (!$this->post($field) || !isset($_SESSION['captchas'][$this->_name]) || strtolower($this->post($field)) != strtolower($_SESSION['captchas'][$this->_name]['answer'])) {
+                    if (!$this->post($field) || ! $this->captcha($this->_name) || strtolower($this->post($field)) != strtolower($this->captcha($this->_name, 'answer'))) {
                         $overallSuccess = false;
-                        $this->_fields[$field]['error'] = CWebApplication::getInstance()->config['captcha'][$_SESSION['captchas'][$this->_name]['index']]['incorrect'];
+                        $this->_fields[$field]['error'] = CWebApplication::getInstance()->config['captcha'][ $this->captcha($this->_name, 'index') ]['incorrect'];
                     }
                 }
                 $this->_fields[$field]['value'] = $this->post($field);
@@ -232,7 +234,7 @@ defined('ALL_SYSTEMS_GO') or die;
         *
         * @param mixed $model - the model (or array) from which to populate the form values
         */
-        function populateFromModel($model) {
+        public function populateFromModel($model) {
             $checkboxGroupFields = array();
             foreach($this->_fields as $field => $specs) {
                 if($specs['type'] == 'checkboxGroup') {
@@ -265,7 +267,7 @@ defined('ALL_SYSTEMS_GO') or die;
         *
         * @param mixed $array - the array from which to populate the form values
         */
-        function populateFromArray($array) {
+        public function populateFromArray($array) {
             $this->populateFromModel($array);
         }
 
@@ -274,7 +276,7 @@ defined('ALL_SYSTEMS_GO') or die;
         *
         * @param string $message - the message to display at the top of the form
         */
-        function setMessage($message) {
+        public function setMessage($message) {
             $this->_formMessage = $message;
         }
 
@@ -282,7 +284,7 @@ defined('ALL_SYSTEMS_GO') or die;
         * getMessage - returns the message of the form
         * @return string
         */
-        function getMessage() {
+        public function getMessage() {
             return $this->_formMessage;
         }
 
@@ -390,11 +392,45 @@ defined('ALL_SYSTEMS_GO') or die;
         }
 
 
-        protected function post($key, $filter = FILTER_SANITIZE_STRING) {
-            return filter_input(INPUT_POST, $key, FILTER_SANITIZE_STRING);
+        /** Wrapper around 'captchas' within the user-session.
+        */
+        private function initCaptcha() {
+            $session = CSessionHandler::getInstance();
+            if (!$session->session('captchas')) {
+                $session->put('captchas', array());
+            }
         }
 
+        private function putCaptcha($key, $value) {
+            $session = CSessionHandler::getInstance();
+            $captcha = $session->session('captchas');
+            $captcha[ $key ] = $value;
+            return $captcha;
+        }
+
+        private function captcha($key, $keyR = null, $keyZ = null) {
+            $session = CSessionHandler::getInstance();
+            $captcha = $session->session('captchas');
+            /*if ($keyZ) {
+                return $captcha[ $key ][ $keyR ][ $keyZ ];
+            }*/
+            if ($keyR) {
+                return $captcha[ $key ][ $keyR ];
+            }
+            return $captcha[ $key ];
+        }
+
+        /**
+        * @return string  Return a HTTP POST value.
+        */
+        protected function post($key, $filter = FILTER_SANITIZE_STRING) {
+            return filter_input(INPUT_POST, $key, $filter);
+        }
+
+        /**
+        * @return string  Return a HTTP server value.
+        */
         protected function server($key, $filter = FILTER_SANITIZE_STRING) {
-            return filter_input(INPUT_SERVER, $key, FILTER_SANITIZE_STRING);
+            return filter_input(INPUT_SERVER, $key, $filter);
         }
     }

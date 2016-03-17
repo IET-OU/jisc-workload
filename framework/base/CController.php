@@ -95,6 +95,7 @@ defined('ALL_SYSTEMS_GO') or die;
                     $$name = $value;
                 }
             }
+            // Ignore Code Climate warning - 'webroot' used in included template!
             $webroot = $this->application->webRoot();
             $template = 'default';
             $templateFile = $this->application->templateRoot . DIRECTORY_SEPARATOR . $template . '.php';

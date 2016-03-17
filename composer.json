@@ -36,6 +36,7 @@
       "phpcs --standard=./phpcs.xml -n --encoding=utf-8 --extensions=php framework/base/CController.*",
       "phpcs --standard=./phpcs.xml -n --encoding=utf-8 --extensions=php framework/controllers/"
     ],
+    "bugs": "ghi | cat",
     "fix": [
       "phpcbf --standard=PSR2 -n --encoding=utf-8 index.php"
     ]

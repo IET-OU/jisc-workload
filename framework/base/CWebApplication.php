@@ -122,7 +122,9 @@ defined('ALL_SYSTEMS_GO') or die;
 
             $session = CSessionHandler::getInstance();
             $session->start();
-            if(isset($_SESSION['user'])) $this->user = $_SESSION['user'];
+            if ($session->session('user')) {
+                $this->user = $session->session('user');
+            }
 
             if($this->getParam('uri')) $uriComponents = explode('/', $this->getParam('uri'));
             else $uriComponents = array();
@@ -136,16 +138,16 @@ defined('ALL_SYSTEMS_GO') or die;
 
             try {
                 if(isset($uriComponents[0]) && $uriComponents[0] == 'logout') {
-                    $_SESSION['user'] = null;
+                    $session->put('user', null);
                     $this->responseHandler->redirect('/');
                 }
                 else if(isset($uriComponents[0]) && $uriComponents[0] == 'accept-cookies') {
-                    $visitor = CVisitorModel::loadByPk($_SESSION['session']->visitorId);
+                    $visitor = CVisitorModel::loadByPk($session->session('session')->visitorId);
                     if($visitor) {
                         $visitor->acceptedCookies = 1;
                         $visitor->update();
                     }
-                    $_SESSION['acceptedCookies'] = true;
+                    $session->put('acceptedCookies', true);
                     $this->responseHandler->redirect('/');
                 }
                 else {
@@ -189,12 +191,13 @@ defined('ALL_SYSTEMS_GO') or die;
             catch(CAccessDeniedException $e) {
                 echo $e->getMessage();
             }
-            $_SESSION['session']->setDefaultValues();
-            $_SESSION['session']->update();
+            $session->theSession()->setDefaultValues();
+            $session->theSession()->update();
+
             $timeEnd = microtime(true);
             $responseTime = ($timeEnd - $timeStart) * 1000;
             $pageHit = new CPageHitModel();
-            $pageHit->sessionId = $_SESSION['session']->sessionId;
+            $pageHit->sessionId = $session->theSession()->sessionId;
             $pageHit->uri = '/' . implode('/', $uriComponents) . '/';
             $pageHit->errors = CErrorHandler::getInstance()->getNumErrors();
             $pageHit->responseTime = round($responseTime);
@@ -212,9 +215,10 @@ defined('ALL_SYSTEMS_GO') or die;
         public function authenticateUser($login, $pass) {
             $success = $this->user->authenticate($login, $pass);
             if($success) {
-                $_SESSION['user'] = $this->user;
-                $_SESSION['session']->userId = $this->user->userId;
-                $_SESSION['session']->update();
+                $session = CSessionHandler::getInstance();
+                $session->put('user', $this->user);
+                $session->theSession()->userId = $this->user->userId;
+                $session->theSession()->update();
             }
             return $success;
         }
@@ -342,18 +346,23 @@ defined('ALL_SYSTEMS_GO') or die;
         }
 
         /**
-        * webRoot - Get the web root URL path.
-        * @return string
+        * @return string  Return the web root URL path.
         */
         public function webRoot() {
             return $this->config[ 'webroot' ];
         }
 
+        /**
+        * @return string  Return a HTTP server value.
+        */
         protected function server($key, $filter = FILTER_SANITIZE_STRING) {
-            return filter_input(INPUT_SERVER, $key, FILTER_SANITIZE_STRING);
+            return filter_input(INPUT_SERVER, $key, $filter);
         }
 
+        /**
+        * @return string  Return a HTTP GET parameter.
+        */
         protected function getParam($key, $filter = FILTER_SANITIZE_STRING) {
-            return filter_input(INPUT_POST, $key, FILTER_SANITIZE_STRING);
+            return filter_input(INPUT_GET, $key, $filter);
         }
     }

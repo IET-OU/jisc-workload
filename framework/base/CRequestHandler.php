@@ -90,11 +90,17 @@ defined('ALL_SYSTEMS_GO') or die;
             return $this->post('formId') == sha1($formName);
         }
 
+        /**
+        * @return string  Return a HTTP POST value.
+        */
         protected function post($key, $filter = FILTER_SANITIZE_STRING) {
-            return filter_input(INPUT_POST, $key, FILTER_SANITIZE_STRING);
+            return filter_input(INPUT_POST, $key, $filter);
         }
 
+        /**
+        * @return string  Return a HTTP GET parameter.
+        */
         protected function getParam($key, $filter = FILTER_SANITIZE_STRING) {
-            return filter_input(INPUT_POST, $key, FILTER_SANITIZE_STRING);
+            return filter_input(INPUT_POST, $key, $filter);
         }
     }

@@ -70,15 +70,17 @@ defined('ALL_SYSTEMS_GO') or die;
             else $log = array();
             $log[] = $error;
 
-            file_put_contents($logFile,json_encode($log));
+            file_put_contents($logFile, json_encode($log));  //Was: . "\n");
         }
 
-        protected function getParam($key) {
-            return filter_input(INPUT_GET, $key, FILTER_SANITIZE_URL);
+        /**
+        * @return string  Return a HTTP GET parameter.
+        */
+        protected function getParam($key, $filter = FILTER_SANITIZE_URL) {
+            return filter_input(INPUT_GET, $key, $filter);
         }
 
         protected function isLocalhost() {
-            return strpos(filter_input(INPUT_SERVER, 'SERVER_NAME'), '.') === false;
+            return strpos(filter_input(INPUT_SERVER, 'SERVER_NAME', FILTER_SANITIZE_URL), '.') === false;
         }
   }
-?>

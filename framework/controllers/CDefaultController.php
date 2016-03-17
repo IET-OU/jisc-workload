@@ -24,7 +24,7 @@ defined('ALL_SYSTEMS_GO') or die;
         *
         */
         public function __construct() {
-            parent::__construct('admin','Default');
+            parent::__construct('admin', 'Default');
         }
 
 
@@ -32,7 +32,7 @@ defined('ALL_SYSTEMS_GO') or die;
         * actionView - Default view when no controller or action is selected
         *
         */
-        function actionView() {
+        public function actionView() {
             // If user is authenticated show the overview screen
             if($this->application->user->isAuthenticated()) {
                 if($this->application->user->isSuperAdministrator()) {
@@ -54,7 +54,7 @@ defined('ALL_SYSTEMS_GO') or die;
         * actionLogin - logs in a user
         *
         */
-        function actionLogin() {
+        public function actionLogin() {
             if(( $this->getParam('resetToken') && $this->getParam('login') ) || $this->post('resetToken')) {
                 $fields = array(
                     'login' => array('type'=>'hidden', 'value'=>$this->application->requestHandler->requestVar(CRequestHandler::TYPE_STRING,'login')),
