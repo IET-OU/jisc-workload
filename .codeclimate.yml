@@ -1,0 +1,35 @@
+# Code Climate Platform - https://codeclimate.com/github/IET-OU/jisc-workload
+---
+engines:
+  csslint:
+    enabled: true
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - javascript
+      - php
+  eslint:
+    enabled: true
+  fixme:
+    enabled: true
+  rubocop:
+    enabled: false
+ratings:
+  paths:
+  - "**.css"
+  - "**.js"
+  - "**.php"
+exclude_paths:
+  - "css/bootstrap-theme.min.css"
+  - "css/bootstrap.min.css"
+  - "fonts/*"
+  - "framework/libraries/*"
+  - "js/bootstrap.min.js"
+  - "js/jquery-1.10.2.min.js"
+  # Auto-generated!
+  - "js/ef5*.js"
+  - "site/logs/*"
+  - "vendor/**/*"
+
+#End.
