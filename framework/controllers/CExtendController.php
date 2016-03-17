@@ -27,4 +27,12 @@ class CExtendController extends CController
         $this->attachViewToRegion('googleAnalytics', 'default', 'googleAnalytics',
             array('analyticsId' => $this->application->config[ 'googleAnalyticsId' ]));
     }
+
+    protected function getParam($key, $filter = FILTER_SANITIZE_STRING) {
+        return filter_input(INPUT_POST, $key, FILTER_SANITIZE_STRING);
+    }
+
+    protected function post($key, $filter = FILTER_SANITIZE_STRING) {
+        return filter_input(INPUT_POST, $key, FILTER_SANITIZE_STRING);
+    }
 }

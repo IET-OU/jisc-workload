@@ -89,7 +89,7 @@ defined('ALL_SYSTEMS_GO') or die;
         */
         public function __construct() {
             $this->config = require('site' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.php');
-            $this->db = CDatabaseHandler::getInstance($this->config['db']['connectionString'],$this->config['db']['username'],$this->config['db']['password']);
+            $this->db = CDatabaseHandler::getInstance($this->config['db']['connectionString'], $this->config['db']['username'], $this->config['db']['password']);
             $this->documentRoot = __DIR__ . '/../..';   //Was: $_SERVER['DOCUMENT_ROOT'];
             $this->frameworkRoot = realpath(__DIR__ . DIRECTORY_SEPARATOR . '..' );
             $this->viewRoot = $this->frameworkRoot . DIRECTORY_SEPARATOR . 'views';
@@ -124,7 +124,7 @@ defined('ALL_SYSTEMS_GO') or die;
             $session->start();
             if(isset($_SESSION['user'])) $this->user = $_SESSION['user'];
 
-            if(isset($_GET['uri'])) $uriComponents = explode('/',$_GET['uri']);
+            if($this->getParam('uri')) $uriComponents = explode('/', $this->getParam('uri'));
             else $uriComponents = array();
             array_pop($uriComponents);
 
@@ -164,12 +164,12 @@ defined('ALL_SYSTEMS_GO') or die;
                     if($controllerId == 'default' || $this->user->isAdministrator()) {
                         $controllerClass = implode('',array_map(function($elem) {
                             return ucwords($elem);
-                        },explode('-',$controllerId)));
+                        },explode('-', $controllerId)));
                         $controllerClass = 'C' . $controllerClass . 'Controller';
                         $controller = new $controllerClass();
                         $action = 'action' . implode('',array_map(function($elem) {
                             return(ucwords($elem));
-                        },explode('-',$actionId)));
+                        },explode('-', $actionId)));
                         $controller->onBeforeAction();
                         if(method_exists($controller, $action)) {
                             $controller->$action();
@@ -195,7 +195,7 @@ defined('ALL_SYSTEMS_GO') or die;
             $responseTime = ($timeEnd - $timeStart) * 1000;
             $pageHit = new CPageHitModel();
             $pageHit->sessionId = $_SESSION['session']->sessionId;
-            $pageHit->uri = '/' . implode('/',$uriComponents) . '/';
+            $pageHit->uri = '/' . implode('/', $uriComponents) . '/';
             $pageHit->errors = CErrorHandler::getInstance()->getNumErrors();
             $pageHit->responseTime = round($responseTime);
             $pageHit->dbHits = $this->db->getNumHits();
@@ -209,8 +209,8 @@ defined('ALL_SYSTEMS_GO') or die;
         * @param string $login The login or email address of the user
         * @param string $pass The password of the user
         */
-        public function authenticateUser($login,$pass) {
-            $success = $this->user->authenticate($login,$pass);
+        public function authenticateUser($login, $pass) {
+            $success = $this->user->authenticate($login, $pass);
             if($success) {
                 $_SESSION['user'] = $this->user;
                 $_SESSION['session']->userId = $this->user->userId;
@@ -225,7 +225,7 @@ defined('ALL_SYSTEMS_GO') or die;
         * @param string $login The login or email address of the user
         * @return bool True on success or false on invalid login
         */
-        public function resetUserPassword($login,$resetToken = null,$newPassword = null) {
+        public function resetUserPassword($login, $resetToken = null, $newPassword = null) {
             $params = array();
             if(strpos($login,'@') === false) {
                 $params['login'] = $login;
@@ -247,15 +247,15 @@ defined('ALL_SYSTEMS_GO') or die;
                 else {
                     $user->resetToken = sha1(rand(0,100000));
                     $user->update();
-                    $domain = $_SERVER['SERVER_NAME'];
+                    $domain = $this->server('SERVER_NAME');
                     $matches = array();
-                    if(preg_match('/^(www\.)?(.+)$/',$domain,$matches)) {
+                    if(preg_match('/^(www\.)?(.+)$/', $domain, $matches)) {
                         $domain = $matches[2];
                     }
                     $address = 'no-reply@' . $domain;
-                    CMailer::sendEmail($address,$address,$user->email,'Password reset link',
-                        'Please click <a href="http://' . $_SERVER['SERVER_NAME'] . '/login/?login=' . urlencode($login) . '&resetToken=' . $user->resetToken . '">here</a> to reset your password.',
-                        'Please use the following URL to reset your password: http://'. $_SERVER['SERVER_NAME'] . '/admin/login?login=' . urlencode($login) . '&resetToken=' . $user->resetToken
+                    CMailer::sendEmail($address, $address, $user->email,'Password reset link',
+                        'Please click <a href="http://' . $domain . '/login/?login=' . urlencode($login) . '&resetToken=' . $user->resetToken . '">here</a> to reset your password.',
+                        'Please use the following URL to reset your password: http://'. $domain . '/admin/login?login=' . urlencode($login) . '&resetToken=' . $user->resetToken
                     );
                     return true;
                 }
@@ -271,7 +271,7 @@ defined('ALL_SYSTEMS_GO') or die;
         * @param array $files - array of JavaScript files to combine
         */
         private function _getAggregateJavaScriptFile($files) {
-            $filename = sha1(implode('',$files)) . '.js';
+            $filename = sha1(implode('', $files)) . '.js';
             $requireRefresh = false;
             if(file_exists($this->documentRoot . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . $filename)) {
                 $time = filemtime($this->documentRoot . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . $filename);
@@ -287,7 +287,7 @@ defined('ALL_SYSTEMS_GO') or die;
             foreach($files as $file) {
                 $aggregate .= file_get_contents($this->documentRoot . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . $file) . "\r\n";
             }
-            file_put_contents($this->documentRoot . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . $filename,$aggregate);
+            file_put_contents($this->documentRoot . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . $filename, $aggregate);
             return '/js/' . $filename;
         }
 
@@ -298,8 +298,8 @@ defined('ALL_SYSTEMS_GO') or die;
         * @param array $files - array of .js files to add
         * @param string $location - position in the HTML document to load the files in
         */
-        public function includeJavaScriptFiles($files,$location = 'body') {
-            $this->_javaScriptIncludes[$location] = array_merge($this->_javaScriptIncludes[$location],$files);
+        public function includeJavaScriptFiles($files, $location = 'body') {
+            $this->_javaScriptIncludes[$location] = array_merge($this->_javaScriptIncludes[$location], $files);
         }
 
         /**
@@ -308,7 +308,7 @@ defined('ALL_SYSTEMS_GO') or die;
         * @param string $snippet
         * @param string $location
         */
-        public function includeJavaScriptSnippet($snippet,$location = 'body') {
+        public function includeJavaScriptSnippet($snippet, $location = 'body') {
             $this->_javaScript[$location][] = $snippet;
         }
 
@@ -322,7 +322,7 @@ defined('ALL_SYSTEMS_GO') or die;
                 echo '<script src="' . $file . '"></script>';
             }
             if(count($this->_javaScript['header']) > 0) {
-                echo '<script>' . implode("\r\n",$this->_javaScript['header']) . '</script>';
+                echo '<script>' . implode("\r\n", $this->_javaScript['header']) . '</script>';
             }
         }
 
@@ -336,7 +336,7 @@ defined('ALL_SYSTEMS_GO') or die;
                 echo '<script src="' . $this->webRoot() . $file . '"></script>';
             }
             if(count($this->_javaScript['body']) > 0) {
-                echo '<script>' . implode("\r\n",$this->_javaScript['body']) . '</script>';
+                echo '<script>' . implode("\r\n", $this->_javaScript['body']) . '</script>';
             }
             echo '<!--[if lt IE 9]><script src="'. $this->webRoot() .'/js/respond.min.js"></script><![endif]-->';
         }
@@ -347,5 +347,13 @@ defined('ALL_SYSTEMS_GO') or die;
         */
         public function webRoot() {
             return $this->config[ 'webroot' ];
+        }
+
+        protected function server($key, $filter = FILTER_SANITIZE_STRING) {
+            return filter_input(INPUT_SERVER, $key, FILTER_SANITIZE_STRING);
+        }
+
+        protected function getParam($key, $filter = FILTER_SANITIZE_STRING) {
+            return filter_input(INPUT_POST, $key, FILTER_SANITIZE_STRING);
         }
     }

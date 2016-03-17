@@ -129,8 +129,9 @@ defined('ALL_SYSTEMS_GO') or die;
          */
 
          function serveJson($json) {
-            if (isset($_SERVER['HTTP_ACCEPT']) &&
-                (strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)) {
+            $http_accept = filter_input(INPUT_SERVER, 'HTTP_ACCEPT', FILTER_SANITIZE_STRING);
+
+            if (strpos($http_accept, 'application/json') !== false) {
                 header('Content-type: application/json');
             }
             else {

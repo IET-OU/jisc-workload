@@ -13,8 +13,10 @@
 
 define("ALL_SYSTEMS_GO", true);
 
-if (strpos($_SERVER['SERVER_NAME'], '.') !== false) {
-    ini_set('display_errors', '0');
+// Test for 'localhost'.
+$server_name = filter_input(INPUT_SERVER, 'SERVER_NAME', FILTER_SANITIZE_URL);
+if (strpos($server_name, '.') !== false) {
+    ini_set('display_errors', 0);
 }
 
     set_exception_handler(function (Exception $e) {

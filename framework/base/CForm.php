@@ -76,7 +76,7 @@ defined('ALL_SYSTEMS_GO') or die;
             foreach($fields as $field) {
                 if($field['type'] == 'captcha') {
                     $max = count(CWebApplication::getInstance()->config['captcha']);
-                    if($max > 1) $index = rand(0,$max);
+                    if($max > 1) $index = rand(0, $max);
                     else $index = 0;
                     if(!isset($_SESSION['captchas'])) $_SESSION['captchas'] = array();
                     $_SESSION['captchas'][$name] = array('index'=>$index,'answer'=>CWebApplication::getInstance()->config['captcha'][$index]['answer']);
@@ -89,7 +89,7 @@ defined('ALL_SYSTEMS_GO') or die;
         *
         */
         function wasSubmitted() {
-            return $_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['_formId']) && $_POST['_formId'] == sha1($this->_name);
+            return $this->server('REQUEST_METHOD') == 'POST' && $this->post('_formId') == sha1($this->_name);
         }
 
         /**
@@ -101,32 +101,33 @@ defined('ALL_SYSTEMS_GO') or die;
             foreach($this->_fields as $field => $specs) {
                 if($specs['type'] == 'checkboxGroup') {
                     foreach($specs['options'] as $name => $option) {
-                        if(isset($_POST[$name]) && $_POST[$name] == $option['value']) $this->_fields[$field]['options'][$name]['checked'] = true;
+                        if ($this->post($name) == $option['value']) $this->_fields[$field]['options'][$name]['checked'] = true;
                     }
                 }
                 if($specs['type'] == 'textinput' && isset($specs['checkboxAddon'])) {
-                    $state = isset($_POST[$specs['checkboxAddon']['name']]) && $_POST[$specs['checkboxAddon']['name']] == true;
+                    $state = $this->post($specs['checkboxAddon']['name']) == true;
                     $this->_validatedValues[$specs['checkboxAddon']['name']] = $state;
                     if(isset($this->_fields[$field]['disabled'])) $this->_fields[$field]['disabled'] = $state;
                     $this->_fields[$field]['checkboxAddon']['checked'] = $state;
                 }
                 if($specs['type'] == 'captcha') {
-                    if(!isset($_POST[$field]) || !isset($_SESSION['captchas'][$this->_name]) || strtolower($_POST[$field]) != strtolower($_SESSION['captchas'][$this->_name]['answer'])) {
+                    if (!$this->post($field) || !isset($_SESSION['captchas'][$this->_name]) || strtolower($this->post($field)) != strtolower($_SESSION['captchas'][$this->_name]['answer'])) {
                         $overallSuccess = false;
                         $this->_fields[$field]['error'] = CWebApplication::getInstance()->config['captcha'][$_SESSION['captchas'][$this->_name]['index']]['incorrect'];
                     }
                 }
-                if(isset($_POST[$field])) {
-                    $this->_fields[$field]['value'] = $_POST[$field];
-                }
+                $this->_fields[$field]['value'] = $this->post($field);
             }
             foreach($this->_validators as $validator) {
-                $fieldNames = explode(',',$validator[0]);
+                $fieldNames = explode(',', $validator[0]);
                 foreach($fieldNames as $field)  {
-                    if(!array_key_exists($field,$this->_fields)) {
+                    if(!array_key_exists($field, $this->_fields)) {
                         throw new Exception('Form does not have a field named ' . $field);
                     }
 //                    if(isset($_POST[$field])) $this->_fields[$field]['value'] = $_POST[$field];
+
+                    $post_field = $this->post($field);
+
                     $success = true;
                     switch($validator[1]) {
                         case 'required':
@@ -143,7 +144,7 @@ defined('ALL_SYSTEMS_GO') or die;
                             else if($this->_fields[$field]['type'] == 'checkboxGroup') {
                                 $selected = false;
                                 foreach($this->_fields[$field]['options'] as $name => $option) {
-                                    if(isset($_POST[$name])) {
+                                    if($this->post($name)) {
                                         $selected = true;
                                         break;
                                     }
@@ -152,18 +153,18 @@ defined('ALL_SYSTEMS_GO') or die;
                                 if($success == false) $this->_fields[$field]['error'] = 'At least one option needs to be selected';
                             }
                             else {
-                                if(!isset($_POST[$field]) || strlen($_POST[$field]) == 0) {
+                                if(strlen($this->post($field)) == 0) {
                                     $success = false;
                                     $this->_fields[$field]['error'] = 'A value is required';
                                 }
                             }
                             break;
                         case 'length':
-                            if(isset($_POST[$field]) && isset($validator['min']) && strlen($_POST[$field]) > 0 && strlen($_POST[$field]) < $validator['min']) {
+                            if(isset($validator['min']) && strlen($post_field) > 0 && strlen($post_field) < $validator['min']) {
                                 $success = false;
                                 $this->_fields[$field]['error'] = 'Please enter at least ' . $validator['min'] . ' characters';
                             }
-                            if(isset($_POST[$field]) && isset($validator['max']) && strlen($_POST[$field]) > $validator['max']) {
+                            if(isset($validator['max']) && strlen($post_field) > $validator['max']) {
                                 $success = false;
                                 $this->_fields[$field]['error'] = 'Please enter at most ' . $validator['min'] . ' characters';
                             }
@@ -171,19 +172,19 @@ defined('ALL_SYSTEMS_GO') or die;
                         case 'type':
                             switch($validator[2]) {
                                 case 'int':
-                                    if(isset($_POST[$field]) && strlen($_POST[$field]) > 0 && !is_numeric($_POST[$field])) {
+                                    if(strlen($post_field) > 0 && !is_numeric($post_field)) {
                                         $success = false;
                                         $this->_fields[$field]['error'] = 'Value must be a number';
                                     }
                                     break;
                                 case 'float':
-                                    if(isset($_POST[$field]) && strlen($_POST[$field]) > 0 && !preg_match('/^[-]?[0-9]+([.][0-9]+)?$/',$_POST[$field])) {
+                                    if(strlen($post_field) > 0 && !preg_match('/^[-]?[0-9]+([.][0-9]+)?$/', $post_field)) {
                                         $success = false;
                                         $this->_fields[$field]['error'] = 'Value must be a valid floating point';
                                     }
                                     break;
                                 case 'intlist':
-                                    if(isset($_POST[$field]) && strlen($_POST[$field]) > 0 && !preg_match('/^[0-9,]+$/',$_POST[$field])) {
+                                    if(strlen($post_field) > 0 && !preg_match('/^[0-9,]+$/', $post_field)) {
                                         $success = false;
                                         $this->_fields[$field]['error'] = 'Invalid value supplied';
                                     }
@@ -192,7 +193,7 @@ defined('ALL_SYSTEMS_GO') or die;
                         case 'format':
                             switch($validator[2]) {
                                 case 'email':
-                                if(isset($_POST[$field]) && strlen($_POST[$field]) > 0 && (!filter_var($_POST[$field],FILTER_VALIDATE_EMAIL) || !preg_match('/@.+\./', $_POST[$field]))) {
+                                if(strlen($post_field) > 0 && (!filter_var($post_field, FILTER_VALIDATE_EMAIL) || !preg_match('/@.+\./', $post_field))) {
                                     $success = false;
                                     $this->_fields[$field]['error'] = 'Please enter a valid email address';
                                 }
@@ -204,18 +205,18 @@ defined('ALL_SYSTEMS_GO') or die;
                         if($this->_fields[$field]['type'] == 'checkboxGroup') {
                             $selected = array();
                             foreach($this->_fields[$field]['options'] as $name => $option) {
-                                if(isset($_POST[$name])) {
-                                    $selected[] = $_POST[$name];
-                                    $this->_validatedValues[$name] = $_POST[$name];
+                                if(isset($post_field)) {
+                                    $selected[] = $post_field;
+                                    $this->_validatedValues[$name] = $post_field;
                                 }
                                 else {
                                     $this->_validatedValues[$name] = 0;
                                 }
                             }
-                            $value = implode("\r\n",$selected);
+                            $value = implode("\r\n", $selected);
                         }
                         else {
-                            if(isset($_POST[$field])) $value = $_POST[$field];
+                            $value = $this->post($field);
                         }
                         $this->_validatedValues[$field] = $value;
                     }
@@ -243,10 +244,10 @@ defined('ALL_SYSTEMS_GO') or die;
             foreach($model as $field => $value) {
                 if($value === null) continue;
                 if(isset($this->_fields[$field]) && $this->_fields[$field]['type'] == 'checkboxGroup') {
-                    if(is_string($value)) $values = explode("\r\n",$value);
+                    if(is_string($value)) $values = explode("\r\n", $value);
                     else $values = $value;
                     foreach($this->_fields[$field]['options'] as $name => $specs) {
-                        if(in_array($specs['value'],$values)) $this->_fields[$field]['options'][$name]['checked'] = true;
+                        if(in_array($specs['value'], $values)) $this->_fields[$field]['options'][$name]['checked'] = true;
                     }
                 }
                 else if(isset($checkboxGroupFields[$field])) {
@@ -343,7 +344,7 @@ defined('ALL_SYSTEMS_GO') or die;
         * __set magic method
         *
         */
-        function __set($property,$value) {
+        function __set($property, $value) {
             $this->_validatedValues[$property] = $value;
             $this->_fields[$property]['value'] = $value;
         }
@@ -353,7 +354,7 @@ defined('ALL_SYSTEMS_GO') or die;
         * @return boolean
         */
         function offsetExists($offset) {
-            return array_key_exists($offset,$this->_fields);
+            return array_key_exists($offset, $this->_fields);
         }
 
         /**
@@ -368,7 +369,7 @@ defined('ALL_SYSTEMS_GO') or die;
         * offsetSet - implements the ArrayAccess interface and sets the object at the given offset to the provided value
         * @return boolean
         */
-        function offsetSet($offset,$value) {
+        function offsetSet($offset, $value) {
             $this->_fields[$offset] = $value;
         }
 
@@ -379,11 +380,21 @@ defined('ALL_SYSTEMS_GO') or die;
         function offsetUnset($offset) {
             unset($this->_fields[$offset]);
         }
+
         /**
         * getIterator - implements the IteratorAggregate interface and return an iterator for the form fields
         * @return ArrayIterator
         */
         function getIterator() {
             return new ArrayIterator($this->_fields);
+        }
+
+
+        protected function post($key, $filter = FILTER_SANITIZE_STRING) {
+            return filter_input(INPUT_POST, $key, FILTER_SANITIZE_STRING);
+        }
+
+        protected function server($key, $filter = FILTER_SANITIZE_STRING) {
+            return filter_input(INPUT_SERVER, $key, FILTER_SANITIZE_STRING);
         }
     }

@@ -72,7 +72,8 @@ You should now be able to access the tool on the domain name linked to the web s
 
 [travis]: https://travis-ci.org/IET-OU/jisc-workload "Build status — Travis-CI"
 [travis-icon]: https://travis-ci.org/IET-OU/jisc-workload.svg
-[climate]: https://codeclimate.com/github/IET-OU/jisc-workload "Code Climate"
+[climate]: https://codeclimate.com/github/IET-OU/jisc-workload
+    "Code Climate score [GPA, out of 4]"
 [climate-icon]: https://codeclimate.com/github/IET-OU/jisc-workload/badges/gpa.svg
 
 [End]: //end.

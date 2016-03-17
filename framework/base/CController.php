@@ -71,7 +71,7 @@ defined('ALL_SYSTEMS_GO') or die;
         * @param string $view - the name of the view to render
         * @param array $viewVars - array of variables to make accessible to the view
         */
-        public function renderPartial($view,$viewVars = null) {
+        public function renderPartial($view, $viewVars = null) {
             if($viewVars) {
                 foreach($viewVars as $name => $value) {
                     $$name = $value;

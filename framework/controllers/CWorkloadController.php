@@ -133,8 +133,8 @@ defined('ALL_SYSTEMS_GO') or die;
             if($this->application->user->isAuthenticated()) {
                 //This is a workaround for the fact that PHP as standard accepts no more than 1000 items as part of a GET / POST request.
                 //By encoding all items into a single data item and then decoding this back into the POST array we solve this problem
-                if(isset($_POST['data'])) {
-                    $items = explode('&',$_POST['data']);
+                if($this->post('data')) {
+                    $items = explode('&', $this->post('data'));
                     unset($_POST['data']);
                     $i = 0;
                     foreach($items as $item) {

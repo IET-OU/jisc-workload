@@ -55,7 +55,7 @@ defined('ALL_SYSTEMS_GO') or die;
         *
         */
         function actionLogin() {
-            if((isset($_GET['resetToken']) && isset($_GET['login'])) || isset($_POST['resetToken'])) {
+            if(( $this->getParam('resetToken') && $this->getParam('login') ) || $this->post('resetToken')) {
                 $fields = array(
                     'login' => array('type'=>'hidden', 'value'=>$this->application->requestHandler->requestVar(CRequestHandler::TYPE_STRING,'login')),
                     'resetToken' => array('type'=>'hidden', 'value'=>$this->application->requestHandler->requestVar(CRequestHandler::TYPE_STRING,'resetToken')),
@@ -72,7 +72,7 @@ defined('ALL_SYSTEMS_GO') or die;
                     'submit' => array('type'=>'submit', 'label'=>'login', 'class'=>'btn-primary'),
                     'reset' => array('type'=>'html', 'html'=>'<div style="margin-top:10px;"><a href="/admin/login/?reset=1">I forgot my password</a></div>')
                 );
-                if(isset($_GET['reset'])) {
+                if($this->getParam('reset')) {
                     unset($fields['password']);
                     $fields['submit']['label'] = 'Reset my password';
                     $fields['cancel'] = array('type'=>'button','class'=>'btn-warning','label'=>'Cancel','url'=>'/admin/login/');
@@ -81,7 +81,7 @@ defined('ALL_SYSTEMS_GO') or die;
                 }
                 else $validators =  array(array('login,password','required'));
             }
-            if(isset($_POST['reset'])) $validators = array(array('login','required'),array('reset','safe'));
+            if($this->post('reset')) $validators = array(array('login','required'),array('reset','safe'));
 
             $loginForm = new CForm('login-form','/login/',$fields,$validators,false);
 
