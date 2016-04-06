@@ -75,7 +75,7 @@ defined('ALL_SYSTEMS_GO') or die;
                 if($this->getParam('reset')) {
                     unset($fields['password']);
                     $fields['submit']['label'] = 'Reset my password';
-                    $fields['cancel'] = array('type'=>'button','class'=>'btn-warning','label'=>'Cancel','url'=>'/admin/login/');
+                    $fields['cancel'] = array('type'=>'button','class'=>'btn-warning','label'=>'Cancel','url'=>'/login/');
                     $fields['reset'] = array('type'=>'hidden','value'=>1);
                     $validators = array(array('login,reset','required'));
                 }
