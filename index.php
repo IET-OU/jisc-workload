@@ -19,7 +19,7 @@ if (strpos($server_name, '.') !== false) {
     ini_set('display_errors', 0);
 }
 
-    set_exception_handler(function (Exception $e) {
+    set_exception_handler(function (Throwable $e) {
         $handler = CErrorHandler::getInstance();
         $handler->logError("Exception", $e->getMessage(), $e->getFile(), $e->getLine(), $e->getTraceAsString());
     });
