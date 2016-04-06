@@ -70,7 +70,7 @@ defined('ALL_SYSTEMS_GO') or die;
                     'login' => array('type'=>'textinput', 'placeholder'=>'username or email...'),
                     'password' => array('type'=>'password', 'placeholder'=>'password...'),
                     'submit' => array('type'=>'submit', 'label'=>'login', 'class'=>'btn-primary'),
-                    'reset' => array('type'=>'html', 'html'=>'<div style="margin-top:10px;"><a href="/admin/login/?reset=1">I forgot my password</a></div>')
+                    'reset' => array('type'=>'html', 'html'=>'<div style="margin-top:10px;"><a href="/login/?reset=1">I forgot my password</a></div>')
                 );
                 if($this->getParam('reset')) {
                     unset($fields['password']);
