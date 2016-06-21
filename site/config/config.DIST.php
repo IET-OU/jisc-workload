@@ -209,9 +209,12 @@
             'password' => '{ EDIT ME }'
         ),
         'mailer' => array(
-            'host' => '{ EDIT ME }',
-            'username' => '{ EDIT ME }',
-            'password' => '{ EDIT ME }'
+            'default' => array(
+                'host' => '{ EDIT ME }',
+                'port' => 25,
+                'username' => '{ EDIT ME }',
+                'password' => '{ EDIT ME }',
+            ),
         ),
         'webroot' => '',  //{ EDIT ME }
         'googleAnalyticsId' => 'UA-3845152-20',
