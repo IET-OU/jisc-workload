@@ -101,6 +101,6 @@ defined('ALL_SYSTEMS_GO') or die;
         * @return string  Return a HTTP GET parameter.
         */
         protected function getParam($key, $filter = FILTER_SANITIZE_STRING) {
-            return filter_input(INPUT_POST, $key, $filter);
+            return filter_input(INPUT_GET, $key, $filter);
         }
     }
