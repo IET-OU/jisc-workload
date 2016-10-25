@@ -109,21 +109,21 @@ function processWorkloadTable() {
     var unit = 0;
     $('#workload-table tbody tr').each(function(e) {
         var $row = $(this);
-        if(!$row.hasClass('summary') && !$row.next().hasClass('summary') && !$row.next().length === 0) {
-            $row.find('input.item-id').attr('name', 'row-' + row + '-item-id');
-            $row.find('input.unit').attr('name', 'row-' + row + '-unit').val(unit);
-            $row.find('input.title').attr('name', 'row-' + row + '-title');
-            $row.find('input.wordcount').attr('name', 'row-' + row + '-wordcount');
-            $row.find('select.wpm').attr('name', 'row-' + row + '-wpm');
-            $row.find('input.av').attr('name', 'row-' + row + '-av');
-            $row.find('input.other').attr('name', 'row-' + row + '-other');
-            $row.find('input.FHI').attr('name', 'row-' + row + '-FHI');
-            $row.find('input.communication').attr('name', 'row-' + row + '-communication');
-            $row.find('input.productive').attr('name', 'row-' + row + '-productive');
-            $row.find('input.experiential').attr('name', 'row-' + row + '-experiential');
-            $row.find('input.interactive').attr('name', 'row-' + row + '-interactive');
-            $row.find('input.assessment').attr('name', 'row-' + row + '-assessment');
-            $row.find('input.tuition').attr('name', 'row-' + row + '-tuition');
+        if(!$row.hasClass('summary') && !$row.next().hasClass('summary') && !($row.next().length === 0)) {
+            $row.find('input.item-id').attr('name', 'row-' + row_idx + '-item-id');
+            $row.find('input.unit').attr('name', 'row-' + row_idx + '-unit').val(unit);
+            $row.find('input.title').attr('name', 'row-' + row_idx + '-title');
+            $row.find('input.wordcount').attr('name', 'row-' + row_idx + '-wordcount');
+            $row.find('select.wpm').attr('name', 'row-' + row_idx + '-wpm');
+            $row.find('input.av').attr('name', 'row-' + row_idx + '-av');
+            $row.find('input.other').attr('name', 'row-' + row_idx + '-other');
+            $row.find('input.FHI').attr('name', 'row-' + row_idx + '-FHI');
+            $row.find('input.communication').attr('name', 'row-' + row_idx + '-communication');
+            $row.find('input.productive').attr('name', 'row-' + row_idx + '-productive');
+            $row.find('input.experiential').attr('name', 'row-' + row_idx + '-experiential');
+            $row.find('input.interactive').attr('name', 'row-' + row_idx + '-interactive');
+            $row.find('input.assessment').attr('name', 'row-' + row_idx + '-assessment');
+            $row.find('input.tuition').attr('name', 'row-' + row_idx + '-tuition');
             row_idx++;
         }
         if($row.hasClass('summary')) {
