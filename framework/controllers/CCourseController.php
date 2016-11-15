@@ -41,7 +41,7 @@ defined('ALL_SYSTEMS_GO') or die;
                     $courses = CCourseModel::loadByAttributes(array('deleted'=>null),array('order by'=>'`created` desc'))->getObjectArray();
                 }
                 else {
-                    $faculties = CFacultyModel::loadByAttributes(array('deletedl=>null,'institutionId'=>$this->application->user->institutionId))->getObjectArray();
+                    $faculties = CFacultyModel::loadByAttributes(array('deleted'=>null,'institutionId'=>$this->application->user->institutionId))->getObjectArray();
                     if(count($faculties) > 0) $courses = CCourseModel::loadByAttributes(array('deleted'=>null,'facultyId'=>array('in',array_keys($faculties)),array('order by'=>'`created` desc'))->getObjectArray();
                     else $courses = array();
                 }
