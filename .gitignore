@@ -1,7 +1,9 @@
 # .gitignore
 
+composer.phar
 composer.lock
 /vendor/*
+/node_modules/*
 
 /framework/tables.sql
 /site/config/config.php
@@ -20,4 +22,4 @@ composer.lock
 
 ._git
 
-#End.
+# End.

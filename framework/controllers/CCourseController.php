@@ -42,8 +42,16 @@ defined('ALL_SYSTEMS_GO') or die;
                 }
                 else {
                     $faculties = CFacultyModel::loadByAttributes(array('deleted'=>null,'institutionId'=>$this->application->user->institutionId))->getObjectArray();
-                    if(count($faculties) > 0) $courses = CCourseModel::loadByAttributes(array('deleted'=>null,'facultyId'=>array('in',array_keys($faculties)),array('order by'=>'`created` desc'))->getObjectArray();
-                    else $courses = array();
+
+                    if(count($faculties) > 0) {
+                      $courses = CCourseModel::loadByAttributes(array(
+                        'deleted' => null,
+                        'facultyId' => array('in', array_keys($faculties)),
+                        array('order by' => '`created` desc')
+                      ))->getObjectArray();
+                    } else {
+                      $courses = array();
+                    }
                 }
                 $this->attachViewToRegion('main','course','view',array('courses'=>$courses));
                 $this->render();
