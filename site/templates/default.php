@@ -42,7 +42,7 @@
                         <h1>Student Workload Tool</h1>
                         <div class="logos">
                             <a href="https://www.jisc.ac.uk/"><img src="<?= $webroot ?>/css/img/jisc-logo.png" alt="Jisc" title="Jisc"></a>
-                            <a href="http://www.open.ac.uk/"><img src="<?= $webroot ?>/css/img/ou-logo.png" alt="The Open University" title="The Open University"></a>
+                            <a href="https://www.open.ac.uk/"><img src="<?= $webroot ?>/css/img/ou-logo.png" alt="The Open University" title="The Open University"></a>
                             <a href="<?= $webroot ?>/logout/"><img src="<?= $webroot ?>/css/img/logout.png" alt="Logout" title="Logout"></a>
                         </div>
                     </div>
@@ -60,7 +60,7 @@
                     <div class="col-xs-12">
 
                       <p>
-                        <a href="https://www.open.ac.uk">&copy; The Open University</a>
+                        <a href="https://www.open.ac.uk" title="Copyright &copy; The Open University (IET)">&copy; The Open University</a>
                         |
                         <a href="https://www.open.ac.uk/privacy">Privacy policy</a>
                       </p>
@@ -76,7 +76,7 @@
             if(!isset($_SESSION['acceptedCookies']) || $_SESSION['acceptedCookies'] == false):
         ?>
             <div class="cookies-notice" role="alert"><table><tbody><tr><td><img src="<?= $webroot ?>/css/img/cookies.png" alt="" /></td>
-            <td>This site uses <a href="http://en.wikipedia.org/wiki/HTTP_cookie" target="_blank">cookies</a>.
+            <td>This site uses <a href="https://en.wikipedia.org/wiki/HTTP_cookie" target="_blank">cookies</a>.
             These cookies store small bits of anonymous data on how visitors use this website.
             By using this website you agree that we place these cookies on your device.
             <a href="<?= $webroot ?>/accept-cookies/">Hide this notice</a></td></tr></tbody></table></div>

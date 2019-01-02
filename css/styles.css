@@ -255,4 +255,8 @@ th.tuition,.segment.tuition {
 
 #site-footer {
     font-size: small;
+    word-spacing: .4rem;
+}
+#site-footer a {
+    word-spacing: 0;
 }
