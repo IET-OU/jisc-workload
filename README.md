@@ -43,6 +43,10 @@ web server which can be accessed by the workload tool.
 
 You should now be able to access the tool on the domain name linked to the web server.
 
+## GDPR
+
+Details of GDPR / privacy actions can be found in [Bug #7][].
+
 ## Acknowledgements
 
 * Contributors:  [@djitsz][] (original developer)
@@ -55,7 +59,7 @@ You should now be able to access the tool on the domain name linked to the web s
 
 
 ---
-© 2015 The Open University ([Institute of Educational Technology][iet]).
+[©][c] 2015 The Open University ([Institute of Educational Technology][iet]).
 
 
 [blog]: http://analytics.jiscinvolve.org/wp/2016/02/09/guest-post-jisc-ou-student-workload-tool/
@@ -63,7 +67,8 @@ You should now be able to access the tool on the domain name linked to the web s
 [gpl]: https://gnu.org/licenses/gpl.html
 [src]: https://github.com/IET-OU/
 [jisc]: https://jisc.ac.uk/ "formerly the Joint Information Systems Committee, UK"
-[iet]: http://iet.open.ac.uk/ "Institute of Educational Technology"
+[iet]: https://iet.open.ac.uk/ "Institute of Educational Technology"
+[c]: https://www.open.ac.uk/copyright "Copyright © 2015-2019 The Open University (IET)"
 [@djitsz]: https://github.com/djitsz "Jitse van Ameijde"
 [swiftmailer]: https://packagist.org/packages/swiftmailer/swiftmailer
 
@@ -75,5 +80,6 @@ You should now be able to access the tool on the domain name linked to the web s
 [climate]: https://codeclimate.com/github/IET-OU/jisc-workload
     "Code Climate score [GPA, out of 4]"
 [climate-icon]: https://codeclimate.com/github/IET-OU/jisc-workload/badges/gpa.svg
+[bug #7]: https://github.com/IET-OU/jisc-workload/issues/7 "GDPR / privacy"
 
-[End]: //end.
+[End]: //.

@@ -58,6 +58,13 @@
             <div class="container">
                 <div class="row">
                     <div class="col-xs-12">
+
+                      <p>
+                        <a href="https://www.open.ac.uk">&copy; The Open University</a>
+                        |
+                        <a href="https://www.open.ac.uk/privacy">Privacy policy</a>
+                      </p>
+
                         <?php
                             $this->renderRegion('footer');
                         ?>

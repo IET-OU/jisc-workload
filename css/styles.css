@@ -67,17 +67,17 @@
     margin-right: 10px;
 }
 body {
-    background: #F4F4DC; 
+    background: #F4F4DC;
 }
 h1 {
     color: #E5B038;
     font-size: 24px;
-    font-weight: bold; 
+    font-weight: bold;
 }
 h2 {
     color: #E5B038;
     font-size: 18px;
-    font-weight: bold; 
+    font-weight: bold;
 }
 a h2:hover {
     color: #E5B038;
@@ -251,4 +251,8 @@ th.tuition,.segment.tuition {
 }
 .chart .row {
     margin-bottom: 5px;
+}
+
+#site-footer {
+    font-size: small;
 }
