@@ -131,6 +131,7 @@ defined('ALL_SYSTEMS_GO') or die;
             array_pop($uriComponents);
 
             $this->includeJavaScriptFiles(array(
+                // '../node_modules/test.js',
                 'jquery-1.10.2.min.js',
                 'bootstrap.min.js',
                 'scripts.js'
